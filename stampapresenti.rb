@@ -4,10 +4,7 @@ require "prawn/measurement_extensions"
 def stampapres(finestra)
 	selcapi = Animals.presenti2(@stallaoper.id)
 	if selcapi.length > 0
-		#foglio = PDF::Writer.new(:paper => "A4")
-		foglio = Prawn::Document.new(:page_size => "A4", :top_margin => 15.mm, :left_margin => 10.mm, :right_margin => 10.mm, :bottom_margin => 10.mm, :compress => true, :info => {:Title => "Stampa presenti in stalla", :Author => "Aurox",:Creator => "Aurox", :Producer => "Prawn", :CreationDate => Time.now}) #.generate "altro/prova2.pdf" do
-		#:Subject => "My Subject",
-		#:Keywords => "test metadata ruby pdf dry",
+		foglio = Prawn::Document.new(:page_size => "A4", :top_margin => 15.mm, :left_margin => 10.mm, :right_margin => 10.mm, :bottom_margin => 10.mm, :compress => true, :info => {:Title => "Stampa presenti in stalla", :Author => "Aurox",:Creator => "Aurox", :Producer => "Prawn", :CreationDate => Time.now})
 
 		foglio.font_size 9
 		#foglio.font("Helvetica")
