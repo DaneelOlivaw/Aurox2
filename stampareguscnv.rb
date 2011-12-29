@@ -1,8 +1,7 @@
 def registrouscnv(finestra, stallaoper, anno)
 	capi = Animals.stamparegistrouscnv(@stallaoper.contatori_id, anno)
 	if capi.length > 0
-		foglio = Prawn::Document.new(:page_size => "A4", :page_layout => :landscape, :top_margin => 10.mm, :left_margin => 5.mm, :right_margin => 10.mm, :bottom_margin => 10.mm, :compress => true, :info => {:Title => "Registro non vidimato di scarico", :Author => "Aurox",:Creator => "Aurox", :Producer => "Prawn", :CreationDate => Time.now}) #.generate "altro/prova2.pdf" do
-		foglio.font_size 9
+		foglio = Prawn::Document.new(:page_size => "A4", :page_layout => :landscape, :top_margin => 10.mm, :left_margin => 5.mm, :right_margin => 10.mm, :bottom_margin => 10.mm, :compress => true, :info => {:Title => "Registro non vidimato di scarico", :Author => "Aurox",:Creator => "Aurox", :Producer => "Prawn", :CreationDate => Time.now})
 		foglio.repeat :all do
 			foglio.text "Registro non vidimato di scarico della stalla #{@stallaoper.stalle.cod317} di #{@stallaoper.ragsoc.ragsoc}",:align => :center, :style => :bold
 		end
