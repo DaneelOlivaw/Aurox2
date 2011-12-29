@@ -257,6 +257,6 @@ Gtk.init
 		puts "Nessuna modifica"
 	else
 		puts "Ci sono modifiche"
-		puts "Prova"
+		puts "Prova2"
 	end
 Gtk.main
