@@ -158,6 +158,11 @@ def createMenuBar(finestra, listacombo, combo, combo2, combo3)
 			mchiedipassword(nil, "cancelladb")
 		}
 	menustrum.append(itemstrum)
+	itemstrum = Gtk::MenuItem.new("Controlla aggiornamenti")
+	itemstrum.signal_connect("activate") {
+		aggiornaprogramma(finestra, "manuale")
+	}
+	menustrum.append(itemstrum)
 	strumenti.set_submenu( menustrum )
 
 	menubar = Gtk::MenuBar.new

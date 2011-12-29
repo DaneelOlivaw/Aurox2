@@ -253,9 +253,5 @@ Gtk.init
 			Conferma.conferma(window, "Si raccomanda di fare un backup il prima possibile per evitare perdite di dati.")
 		end
 	end
-	if `git remote update`.include?("Counting objects")
-		puts "Ci sono modifiche"
-	else
-		puts "Nessuna modifica"
-	end
+	aggiornaprogramma(window, "automatico")
 Gtk.main
