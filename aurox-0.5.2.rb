@@ -79,7 +79,7 @@ Gtk.init
 	combo.signal_connect( "changed" ) {
 	if combo.active != -1
 		sel2 = Relazs.selragsoc(combo.active_iter[0])
-		sel2.each {|key, value| puts "#{key} is #{value}" }
+		#sel2.each {|key, value| puts "#{key} is #{value}" }
 		listacombo3.clear
 		listacombo2.clear
 		sel2.each do |t|
