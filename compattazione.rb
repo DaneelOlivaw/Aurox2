@@ -1,5 +1,5 @@
 def compattazione(mcompatta, capi, anno, lista)
-	puts anno
+	#puts anno
 	nomefile = Time.now.strftime("STORICO_CAPI_ANNO_#{anno}_#{@stallaoper.stalle.cod317}_#{@stallaoper.ragsoc.ragsoc.gsub(/[ ]/, "")}_#{@stallaoper.prop.prop.gsub(/[ ]/, "")}_#{@stallaoper.atp}_%m%d_%H%M.txt")
 #	if @sistema == "linux"
 	filecomp = File.new("#{@dir}/storico/#{nomefile}", "w+")

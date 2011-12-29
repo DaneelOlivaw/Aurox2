@@ -230,7 +230,7 @@ def datiuscita(finestra, muscite, listasel, combousc)
 # Ricerca se l'allevamento è gestito e può essere effettuato il trasferimento diretto
 			#alldir = Relazs.find(:all, :include => [:stalle, :ragsoc], :conditions => ["stalles.cod317= ? and ragsocs.ragsoc= ?", "#{alldest317}", "#{valcomboalldest}"])
 			alldir = Relazs.cercagestito(alldest317, valcomboalldest)
-			puts alldir.inspect
+			#puts alldir.inspect
 #			puts alldir.length
 #			puts "alldir = #{alldir.id}"
 #			alldir.each do|a|

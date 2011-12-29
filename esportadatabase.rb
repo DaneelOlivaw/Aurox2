@@ -41,7 +41,7 @@ def esportadb(password)
 #	if password == ""
 #		Errore.avviso(nil, "Inserisci una password")
 #	else
-	puts $?
+	#puts $?
 		#system("mysqldump -u root -p'#{password.text}' aurox > ./esportadb/aurox.sql 2> errore.txt")
 		#comando = `mysqldump -u root -p'#{password.text}' aurox > ./esportadb/aurox.sql 2>&1`
 		if @sistema == "linux"
@@ -51,8 +51,8 @@ def esportadb(password)
 			comando = `mysqldump -u aurox -p"#{password}" aurox10 > .\\esportadb\\#{Time.now.strftime("aurox10_%Y%m%d%H%M.sql")} 2>&1`
 #			comando = `mysqldump -u root -p"#{password.text}" aurox > #{@dir}\\esportadb\\#{Time.now.strftime("aurox_%H%M%d%m%y.sql")} 2>&1`
 		end
-		puts comando
-		puts $?
+		#puts comando
+		#puts $?
 		if $? != 0
 #			puts "sbagliato"
 			Errore.avviso(nil, "Password sbagliata")

@@ -53,9 +53,9 @@ def masccompatta
 		risposta = avviso.run
 		avviso.destroy
 		if risposta == Gtk::Dialog::RESPONSE_YES
-			puts "DISTRUGGI!!!"
+			#puts "DISTRUGGI!!!"
 			capicomp = Archives.find(:all, :conditions => ["relaz_id= ? and YEAR(data_uscita) = ?", "#{@stallaoper.id}", "#{comboanno.active_iter[0]}"])
-			puts capicomp.length
+			#puts capicomp.length
 			compattazione(mcompatta, capicomp, comboanno.active_iter[0], lista)
 			#creafile(window)
 		else

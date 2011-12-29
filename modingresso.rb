@@ -267,7 +267,7 @@ def modificacapo(selcapo)
 
 	combonazorig.set_active(0)
 	contanazorig = -1
-	puts capomod[9]
+	#puts capomod[9]
 	while combonazorig.active_iter[2] != capomod[9]
 		contanazorig+=1
 		combonazorig.set_active(contanazorig)

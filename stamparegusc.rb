@@ -1,7 +1,7 @@
 def registrousc(mstamparegistro)
 	capi = Animals.stamparegistrousc(@stallaoper.contatori_id, 0)
 	if capi.length > 0
-		foglio = Prawn::Document.new(:page_size => "A4", :page_layout => :landscape, :top_margin => 20.mm, :left_margin => 5.mm, :right_margin => 10.mm, :bottom_margin => 15.mm, :compress => true, :info => {:Title => "Registro di scarico", :Author => "Aurox",:Creator => "Aurox", :Producer => "Prawn", :CreationDate => Time.now}) #.generate "altro/prova2.pdf" do
+		foglio = Prawn::Document.new(:page_size => "A4", :page_layout => :landscape, :top_margin => 20.mm, :left_margin => 5.mm, :right_margin => 10.mm, :bottom_margin => 15.mm, :compress => true, :info => {:Title => "Registro di scarico", :Author => "Aurox",:Creator => "Aurox", :Producer => "Prawn", :CreationDate => Time.now})
 		selcapi = Array.new
 		data = [["Numero ordine", "Marchio di identificazione", "Razza", "Sesso", "Codice della madre", "N/A", "Data di nascita", "Data di ingresso", "Provenienza", "Motivo uscita", "Data uscita", "Destinazione", "Marca precedente", "Mod. 4 / cert. san."]]
 		Animals.stamparegistrousc(@stallaoper.contatori_id, 0).each do |i, index|

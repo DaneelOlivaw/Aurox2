@@ -1,5 +1,5 @@
 def mchiedipassword(variabile, azione)
-	puts "Chiedipassword"
+	#puts "Chiedipassword"
 	mpassword = Gtk::Window.new("Esportazione database")
 	mpassword.window_position=(Gtk::Window::POS_CENTER_ALWAYS)
 	#mpassword.focus=(true)

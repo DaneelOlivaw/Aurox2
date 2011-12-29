@@ -2,11 +2,11 @@ def aggiornaprogramma(finestra, modo)
 	#puts "aggiornaprogramma"
 	output = `git fetch 2>&1`
 	if output.to_s != ""
-		puts output
+		#puts output
 		Parameters.update("1", {:aggiornamento => "1"})
 	end
 	if Parameters.parametri.aggiornamento == true
-		puts "Aggiornamento pronto"
+		#puts "Aggiornamento pronto"
 		#puts "Output = #{output}"
 #	if output.include?("5")
 		#puts "Ci sono modifiche"

@@ -144,7 +144,7 @@ def createMenuBar(finestra, listacombo, combo, combo2, combo3)
 			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale ed un proprietario.")
 		else
 			capicomp = Archives.count(:conditions => ["relaz_id= ?", "#{@stallaoper.id}"])
-			puts capicomp
+			#puts capicomp
 			if capicomp == 0
 				Errore.avviso(finestra, "Non ci sono capi da compattare.")
 			else

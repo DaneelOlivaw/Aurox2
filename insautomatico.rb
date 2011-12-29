@@ -142,15 +142,15 @@ def insautomatico(finestra, listasel, alldestragsoc, alldest317, alldir, motivou
 	bottinserisci = Gtk::Button.new( "Inserisci" )
 	boxinsaut8.pack_start(bottinserisci, false, false, 5)
 	
-	comboprop.signal_connect( "changed" ) {
-		if comboprop.active != -1
-			puts comboprop.active_iter[0]
-			puts comboprop.active_iter[1]
-			puts comboprop.active_iter[2]
-			puts comboprop.active_iter[3]
-			puts comboprop.active_iter[5]
-		end
-	}
+#	comboprop.signal_connect( "changed" ) {
+#		if comboprop.active != -1
+#			puts comboprop.active_iter[0]
+#			puts comboprop.active_iter[1]
+#			puts comboprop.active_iter[2]
+#			puts comboprop.active_iter[3]
+#			puts comboprop.active_iter[5]
+#		end
+#	}
 	
 	bottinserisci.signal_connect("clicked") {
 		if comboprop.active == -1

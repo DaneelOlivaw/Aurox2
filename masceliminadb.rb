@@ -30,7 +30,7 @@ def eliminadb(password)
 			if db.start_with?("aurox10_")
 				iter = listaeliminadb.append
 				iter[0] = db
-				puts Time.parse("#{iter[0].split('_')[1]}")
+				#puts Time.parse("#{iter[0].split('_')[1]}")
 				iter[1] = Time.parse("#{iter[0].split('_')[1]}").strftime("%d/%m/%Y - %H:%M").to_s
 			end
 		end
@@ -56,12 +56,12 @@ def eliminadb(password)
 			risposta = avviso.run
 			avviso.destroy
 			if risposta == Gtk::Dialog::RESPONSE_YES
-				puts "distruggere"
+				 #puts "distruggere"
 				cancellare = []
 				dbsel = vistaeliminadb.selection
 				dbsel.selected_each do |model, path, iter|
 					cancellare.push(Gtk::TreeRowReference.new(model,path))
-					puts iter[0]
+					#puts iter[0]
 					`mysql -u aurox -p"#{password}" --execute="drop database #{iter[0]}"`
 				end
 				cancellare.each do |c|

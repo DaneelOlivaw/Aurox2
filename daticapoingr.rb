@@ -674,7 +674,7 @@ def inscapo(progr, anno)
 
 					end
 				rescue Exception => errore
-				puts errore
+				#puts errore
 					Errore.avviso(finestraingr, "Controllare le date")
 				end
 			}

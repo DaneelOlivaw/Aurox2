@@ -135,7 +135,7 @@ def creastalla
 		else
 #			cont = Relazs.find(:all, :conditions => ["stalle_id= ? and ragsoc_id= ?", "#{combo317.active_iter[1]}", "#{comboragsoc.active_iter[1]}"])
 #			if cont.length == 0
-			puts Relazs.selprop(combo317.active_iter[1], comboragsoc.active_iter[1]).length
+			#puts Relazs.selprop(combo317.active_iter[1], comboragsoc.active_iter[1]).length
 			if Relazs.selprop(combo317.active_iter[1], comboragsoc.active_iter[1]).length == 0
 				Contatoris.create(:mod4usc => "0/#{@giorno.strftime("%y")}", :pagregcar => "0/#{@giorno.strftime("%y")}", :pagregscar => "0/#{@giorno.strftime("%y")}", :pagreg => "0/#{@giorno.strftime("%y")}", :progreg => "0/#{@giorno.strftime("%y")}")
 				ultimocont = Contatoris.find(:last)

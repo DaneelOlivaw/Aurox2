@@ -36,7 +36,7 @@ end
 
 #def importadb(mimportadb, password2, selezione)
 def importadb(selezione, password)
-puts selezione #.filename
+#puts selezione #.filename
 #	if password2.text == ""
 #		Errore.avviso(mimportadb, "Inserisci una password.")
 #	else

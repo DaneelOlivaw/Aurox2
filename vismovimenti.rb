@@ -15,7 +15,7 @@ def vismovimenti
 	mvismov.add(boxmovv)
 
 	def riempimento(selmov, lista, labelconto)
-		puts "riempimento"
+		#puts "riempimento"
 		selmov.each do |m|
 			itermov = lista.append
 			itermov[0] = m.id.to_i
@@ -160,7 +160,7 @@ def vismovimenti
 	end
 	
 	def riempimento2(selmov, lista, labelconto)
-		puts "riempimento2"
+		#puts "riempimento2"
 		selmov.each do |m|
 			itermov = lista.append
 			itermov[0] = m["id"]
@@ -213,8 +213,8 @@ def vismovimenti
 			itermov[45] = m["fileingr"].to_s
 			itermov[48] = m["fileusc"].to_s
 			itermov[49] = m["stampacar"].to_s
-			puts itermov[49]
-			puts m["stampacar"]
+			#puts itermov[49]
+			#puts m["stampacar"]
 			itermov[50] = m["stampascar"].to_s
 			itermov[46] = m["mod4usc"]
 			itermov[47] = m["data_mod4usc"].to_s
@@ -247,7 +247,7 @@ def vismovimenti
 	}
 	vispresenti.signal_connect("clicked") {
 		lista.clear
-		puts "vispresenti"
+		#puts "vispresenti"
 		#selmov = Animals.presenti2(@stallaoper.id)
 		#puts selmov.inspect
 		#creahash(selmov)

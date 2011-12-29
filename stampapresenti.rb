@@ -18,7 +18,7 @@ def stampapres(finestra)
 			#foglio.move_down 10
 		end
 		#foglio.move_down 10
-		puts foglio.cursor.inspect
+		#puts foglio.cursor.inspect
 		foglio.bounding_box([0, foglio.cursor], :width => 550) do
 
 		data = [["Numero ordine", "Marchio di identificazione", "Razza", "Sesso", "Codice della madre", "Nato / acquisto", "Data di nascita", "Data di ingresso", "Provenienza"]]
@@ -41,8 +41,8 @@ def stampapres(finestra)
 			end
 			data << ["#{i.progreg}", "#{i.marca}", "#{i.razza.cod_razza}", "#{i.sesso}", "#{i.marca_madre}", "#{tipoingr}", "#{i.data_nas.strftime("%d/%m/%Y")}", "#{i.data_ingr.strftime("%d/%m/%Y")}", "#{modingr}"]
 		end
-		puts data.length
-		puts formato
+		#puts data.length
+		#puts formato
 		#foglio.table(data, )
 
 		foglio.table(data, :column_widths => [40, 90, 35, 35, 90, 40, 55, 55], :cell_style => {:size => 8, :padding => [2, 2]}, :header => true, :width => 550)
@@ -51,7 +51,7 @@ def stampapres(finestra)
 		options = {:at => [foglio.bounds.right - 135, 0], :width => 150, :align => :right, :size => 8}
 		string = "pag. <page> di <total>"
 		foglio.number_pages string, options
-		puts foglio.compression_enabled?
+		#puts foglio.compression_enabled?
 		foglio.render_file "#{@dir}/altro/presenze.pdf"
 
 		if @sistema == "linux"

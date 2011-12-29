@@ -23,29 +23,29 @@ def mascarchivia
 # Controllo dei capi da archiviare e greazione delle annate selezionabili.
 
 	capi = Animals.find(:all, :conditions => ["relaz_id= ? and uscito = ? and fileusc= ? and fileingr = ? and stampacar = ? and stampascar = ?", "#{@stallaoper.id}", "1", "1", "1", "1", "1"])
-	puts capi.length
+	#puts capi.length
 	capi.each do |c|
 		arranni << c.uscita.strftime("%Y")
 	end
 	arranni.uniq!
-	puts arranni.inspect
+	#puts arranni.inspect
 
 # Controllo dei capi che non possono essere archiviati e generazione delle annate da non archiviare.
 
 	capi2 = Animals.find(:all, :conditions => ["relaz_id= ? and (uscito = ? or fileusc= ? or fileingr = ? or stampacar = ? or stampascar = ?)", "#{@stallaoper.id}", "0", "0", "0", "0", "0"])
-	puts capi2.length
+	#puts capi2.length
 	capi2.each do |c|
 #		if c.uscita != nil
 		arranni2 << c.data_ingr.strftime("%Y")
 #		end
 	end
 	arranni2.uniq!
-	puts arranni2.inspect
+	#puts arranni2.inspect
 
 # Creazione della lista delle annate archiviabili ( se è presente un capo che non può essere archiviato, tutta l'annata dovrà aspettare.)
 
 	anniarchiviare = arranni - arranni2
-	puts anniarchiviare.inspect
+	#puts anniarchiviare.inspect
 
 	lista = Gtk::ListStore.new(String)
 	anniarchiviare.each do |a|
