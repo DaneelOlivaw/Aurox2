@@ -1,6 +1,3 @@
-require 'prawn'
-require "prawn/measurement_extensions"
-
 def mascallmod4
 	mallmod4 = Gtk::Window.new("Stampa dell'allegato al Modello 4")
 	mallmod4.window_position=(Gtk::Window::POS_CENTER_ALWAYS)

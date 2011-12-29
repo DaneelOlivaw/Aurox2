@@ -2,8 +2,8 @@
 require 'gtk2'
 require 'rubygems'
 require 'active_record'
-require 'pdf/writer'
-require 'pdf/simpletable'
+require 'prawn'
+require "prawn/measurement_extensions"
 require 'ftools'
 
 #Finestre e altro

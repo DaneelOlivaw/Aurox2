@@ -1,6 +1,3 @@
-require 'prawn'
-require "prawn/measurement_extensions"
-
 def stampapres(finestra)
 	selcapi = Animals.presenti2(@stallaoper.id)
 	if selcapi.length > 0
