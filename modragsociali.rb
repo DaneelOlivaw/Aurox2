@@ -36,19 +36,20 @@ def modragsoc
 	end
 
 	caricaragsoc
-	@comboragsoc = Gtk::ComboBox.new(@listaragsoc)
+	comboragsoc = Gtk::ComboBox.new(@listaragsoc)
 	renderer1 = Gtk::CellRendererText.new
-	@comboragsoc.pack_start(renderer1,false)
-	@comboragsoc.set_attributes(renderer1, :text => 1)
-	boxmodragsoc1.pack_start(@comboragsoc.popdown, false, false, 0)
+	comboragsoc.pack_start(renderer1,false)
+	comboragsoc.set_attributes(renderer1, :text => 1)
+	boxmodragsoc1.pack_start(comboragsoc.popdown, false, false, 0)
 
 	#Nome ragione sociale
 
 	labelnomeragsoc = Gtk::Label.new("Nome ragione sociale:")
 	boxmodragsoc2.pack_start(labelnomeragsoc, false, false, 5)
-	@nomeragsoc = Gtk::Entry.new()
-	@nomeragsoc.max_length=(50)
-	boxmodragsoc2.pack_start(@nomeragsoc, false, false, 5)
+	nomeragsoc = Gtk::Entry.new()
+	nomeragsoc.max_length=(50)
+	nomeragsoc.width_chars=(50)
+	boxmodragsoc2.pack_start(nomeragsoc, false, false, 5)
 
 	#Tipo di identificativo fiscale
 
@@ -56,15 +57,15 @@ def modragsoc
 	boxmodragsoc3.pack_start(labeltipoif, false, false, 5)
 	tipoif1 = Gtk::RadioButton.new("Codice fiscale")
 	idfisc = Gtk::Entry.new()
-	@idfisc = Gtk::Entry.new()
+	#@idfisc = Gtk::Entry.new()
 	tipoif1.active=(true)
 	tipoif="F"
-	@idfisc.max_length=(16)
+	idfisc.max_length=(16)
 	tipoif1.signal_connect("toggled") {
 		if tipoif1.active?
 			tipoif="F"
 			#puts tipoif
-			@idfisc.max_length=(16)
+			idfisc.max_length=(16)
 		end
 	}
 	boxmodragsoc3.pack_start(tipoif1, false, false, 5)
@@ -73,7 +74,7 @@ def modragsoc
 		if tipoif2.active?
 			tipoif="I"
 			#puts tipoif
-			@idfisc.max_length=(11)
+			idfisc.max_length=(11)
 		end
 	}
 	boxmodragsoc3.pack_start(tipoif2, false, false, 5)
@@ -81,24 +82,24 @@ def modragsoc
 	#Identificativo fiscale
 
 	labelidfisc = Gtk::Label.new("Identificativo fiscale:")
-	boxmodragsoc3.pack_start(labelidfisc, false, false, 5)
-	@idfisc = Gtk::Entry.new()
+	boxmodragsoc4.pack_start(labelidfisc, false, false, 5)
+	#@idfisc = Gtk::Entry.new()
 #	@idfisc.max_length=(16)
-	boxmodragsoc3.pack_start(@idfisc, false, false, 5)
+	boxmodragsoc4.pack_start(idfisc, false, false, 5)
 
-	@comboragsoc.signal_connect( "changed" ) {
-		@nomeragsoc.text=("#{@comboragsoc.active_iter[1]}")
-		@idfisc.text=("#{@comboragsoc.active_iter[2]}")
-#		tipoif1.active=("#{@comboragsoc.active_iter[4]}")
-		tipoif = @comboragsoc.active_iter[4]
-		if @comboragsoc.active_iter[4] == "F"
+	comboragsoc.signal_connect( "changed" ) {
+		nomeragsoc.text=("#{comboragsoc.active_iter[1]}")
+		idfisc.text=("#{comboragsoc.active_iter[2]}")
+#		tipoif1.active=("#{comboragsoc.active_iter[4]}")
+		tipoif = comboragsoc.active_iter[4]
+		if comboragsoc.active_iter[4] == "F"
 			tipoif1.active=(true)
-			@idfisc.max_length=(16)
-			@idfisc.text=("#{@comboragsoc.active_iter[2]}")
+			idfisc.max_length=(16)
+			idfisc.text=("#{comboragsoc.active_iter[2]}")
 		else
 			tipoif2.active=(true)
-			@idfisc.max_length=(11)
-			@idfisc.text=("#{@comboragsoc.active_iter[3]}")
+			idfisc.max_length=(11)
+			idfisc.text=("#{comboragsoc.active_iter[3]}")
 		end
 	}
 
@@ -106,25 +107,48 @@ def modragsoc
 
 	inserisciragsoc = Gtk::Button.new( "Modifica ragione sociale" )
 	inserisciragsoc.signal_connect("clicked") {
-		if @nomeragsoc.text==("") or @idfisc.text==("")
+		if nomeragsoc.text==("") or idfisc.text==("")
 			Errore.avviso(mmodragsoc, "Servono tutti i dati.")
 		else
 			if tipoif == "F"
-				Ragsocs.update(@comboragsoc.active_iter[0], { :ragsoc => "#{@nomeragsoc.text.upcase}", :codfisc => "#{@idfisc.text.upcase}", :idf => "#{tipoif}"})
-				@nomeragsoc.text=("")
-				@idfisc.text=("")
+				Ragsocs.update(comboragsoc.active_iter[0], { :ragsoc => "#{nomeragsoc.text.upcase}", :codfisc => "#{idfisc.text.upcase}", :idf => "#{tipoif}"})
+				nomeragsoc.text=("")
+				idfisc.text=("")
 				caricaragsoc
-				@comboragsoc.model=(@listaragsoc)
+				comboragsoc.model=(@listaragsoc)
 			else
-				Ragsocs.update(@comboragsoc.active_iter[0], { :ragsoc => "#{@nomeragsoc.text.upcase}", :piva => "#{@idfisc.text.upcase}", :idf => "#{tipoif}"})
-				@nomeragsoc.text=("")
-				@idfisc.text=("")
+				Ragsocs.update(comboragsoc.active_iter[0], { :ragsoc => "#{nomeragsoc.text.upcase}", :piva => "#{idfisc.text.upcase}", :idf => "#{tipoif}"})
+				nomeragsoc.text=("")
+				idfisc.text=("")
 				caricaragsoc
-				@comboragsoc.model=(@listaragsoc)
+				comboragsoc.model=(@listaragsoc)
 			end
 		end
 	}
 	boxmodragsoc5.pack_start(inserisciragsoc, false, false, 0)
+
+	bottelimina = Gtk::Button.new( "Elimina" )
+	bottelimina.signal_connect("clicked") {
+		#puts Relazs.count(:conditions => ["ragsoc_id = ?", comboragsoc.active_iter[0]])
+		if Relazs.count(:conditions => ["ragsoc_id = ?", comboragsoc.active_iter[0]]) == 0
+			avviso = Gtk::MessageDialog.new(mmodragsoc, Gtk::Dialog::DESTROY_WITH_PARENT, Gtk::MessageDialog::QUESTION, Gtk::MessageDialog::BUTTONS_YES_NO, "Proseguo con l'eleminazione della ragione sociale?")
+			risposta = avviso.run
+			avviso.destroy
+			if risposta == Gtk::Dialog::RESPONSE_YES
+				Ragsocs.delete(comboragsoc.active_iter[0])
+				Conferma.conferma(mmodragsoc, "Ragione sociale eliminata.")
+				nomeragsoc.text=("")
+				idfisc.text=("")
+				caricaragsoc
+				comboragsoc.model=(@listaragsoc)
+			else
+				Conferma.conferma(mmodragsoc, "Operazione annullata.")
+			end
+		else
+			Conferma.conferma(mmodragsoc, "La ragione sociale non può essere eliminata perché in uso.")
+		end
+	}
+	boxmodragsoc5.pack_start(bottelimina, false, false, 0)
 
 	#Bottone di chiusura finestra
 

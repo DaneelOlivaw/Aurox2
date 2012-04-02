@@ -1,5 +1,5 @@
 def registrouscnv(finestra, stallaoper, anno)
-	capi = Animals.stamparegistrouscnv(@stallaoper.contatori_id, anno)
+	capi = Animals.stamparegistrouscnv(@stallaoper.id, anno)
 	if capi.length > 0
 		foglio = Prawn::Document.new(:page_size => "A4", :page_layout => :landscape, :top_margin => 10.mm, :left_margin => 5.mm, :right_margin => 10.mm, :bottom_margin => 10.mm, :compress => true, :info => {:Title => "Registro non vidimato di scarico", :Author => "Aurox",:Creator => "Aurox", :Producer => "Prawn", :CreationDate => Time.now})
 		foglio.repeat :all do

@@ -130,7 +130,7 @@ def datimacellazione(finestra, muscite, listasel, combousc)
 	labelmod4usc = Gtk::Label.new("Modello 4:")
 	boxusc8.pack_start(labelmod4usc, false, false, 5)
 	mod4usc = Gtk::Entry.new()
-	progmod4 = @stallaoper.contatori.mod4usc.split("/")
+	progmod4 = @stallaoper.mod4usc.split("/")
 	progmod41 = progmod4[0].to_i
 #	anno = @giorno.strftime("%y")
 #		if progmod4[1].to_i == anno.to_i
@@ -151,17 +151,28 @@ def datimacellazione(finestra, muscite, listasel, combousc)
 	datamod4usc.max_length=(6)
 	boxusc8.pack_start(datamod4usc, false, false, 5)
 
-	datausc.signal_connect("changed") {
-		datamod4usc.text =("#{datausc.text}")
-		if datausc.cursor_position == 5
-			if datausc.text[4,2] == progmod4[1]
-				nmod4 = progmod41 + 1
-			else
-				nmod4 = 1
-			end
-		mod4usc.text = ("#{nmod4}")
+	datausc.signal_connect_after("focus-out-event") {
+		#puts "Fuori!"
+		datausc.text = datausc.text + @giorno.strftime("%y").to_s if datausc.text.length == 4
+		if datausc.text[4,2] == progmod4[1]
+			nmod4 = progmod41 + 1
+		else
+			nmod4 = 1
 		end
+		mod4usc.text = ("#{nmod4}")
+		datamod4usc.text =("#{datausc.text}")
 	}
+#	datausc.signal_connect("changed") {
+#		datamod4usc.text =("#{datausc.text}")
+#		if datausc.cursor_position == 5
+#			if datausc.text[4,2] == progmod4[1]
+#				nmod4 = progmod41 + 1
+#			else
+#				nmod4 = 1
+#			end
+#		mod4usc.text = ("#{nmod4}")
+#		end
+#	}
 
 	combonazdest.set_active(0)
 	z = -1
@@ -222,8 +233,8 @@ def datimacellazione(finestra, muscite, listasel, combousc)
 			#Animals.update(marcauscid, { :uscito => "1", :idcoll => "#{usc.id}"})
 			Animals.update(marcauscid, {:uscita => "#{datauscingl}", :uscite_id => "#{combousc.active_iter[0]}", :nazdest_id => "#{valcombonazdest}", :macelli_id => "#{valcombomacdest}", :trasportatori_id => "#{valcombotrasp}", :mod4usc => "#{@stallaoper.stalle.cod317}/#{Time.parse("#{datamod4uscingl}").strftime("%Y")}/#{mod4usc.text}", :data_mod4usc => "#{datamod4uscingl.to_i}", :uscito => "1"})
 		end
-		Contatoris.update(@stallaoper.contatori.id, { :mod4usc => "#{mod4usc.text}/#{Time.parse("#{datamod4uscingl}").strftime("%y")}"})
-		@stallaoper.contatori.mod4usc = mod4usc.text + "/" + Time.parse("#{datamod4uscingl}").strftime("%y")
+		Relazs.update(@stallaoper.id, { :mod4usc => "#{mod4usc.text}/#{Time.parse("#{datamod4uscingl}").strftime("%y")}"})
+		@stallaoper.mod4usc = mod4usc.text + "/" + Time.parse("#{datamod4uscingl}").strftime("%y")
 		#puts @s.contatori.mod4usc
 		listamacdest == nil
 		Conferma.conferma(mdatimacellazione, "Capi usciti correttamente.")

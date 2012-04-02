@@ -206,6 +206,31 @@ def modallevamenti
 #	}
 #	boxmodallev5.pack_start(annullacampi, false, false, 0)
 
+	bottelimina = Gtk::Button.new( "Elimina" )
+	bottelimina.signal_connect("clicked") {
+		#puts Animals.count(:conditions => ["allevingr_id = ? or allevusc_id = ?", comboallev.active_iter[0], comboallev.active_iter[0]])
+		#puts Relazs.count(:include => [:stalle, :ragsoc], :conditions => ["stalles.cod317 = ? and ragsocs.ragsoc = ?", comboallev.active_iter[3], comboallev.active_iter[1]])
+		if Animals.count(:conditions => ["allevingr_id = ? or allevusc_id = ?", comboallev.active_iter[0], comboallev.active_iter[0]]) == 0 and Relazs.count(:include => [:stalle, :ragsoc], :conditions => ["stalles.cod317 = ? and ragsocs.ragsoc = ?", comboallev.active_iter[3], comboallev.active_iter[1]]) == 0
+			avviso = Gtk::MessageDialog.new(mmodallevam, Gtk::Dialog::DESTROY_WITH_PARENT, Gtk::MessageDialog::QUESTION, Gtk::MessageDialog::BUTTONS_YES_NO, "Proseguo con l'eleminazione dell'allevamento?")
+			risposta = avviso.run
+			avviso.destroy
+			if risposta == Gtk::Dialog::RESPONSE_YES
+				Allevamentis.delete(comboallev.active_iter[0])
+				Conferma.conferma(mmodallevam, "Allevamento eliminato.")
+				nomeallev.text=("")
+				idfisc.text=("")
+				cod317.text=("")
+				caricalista(listallev)
+				comboallev.model=(listallev)
+			else
+				Conferma.conferma(mmodallevam, "Operazione annullata.")
+			end
+		else
+			Conferma.conferma(mmodallevam, "L'allevamento non può essere eliminato perché in uso.")
+		end
+	}
+	boxmodallev5.pack_start(bottelimina, false, false, 0)
+
 	#Bottone di chiusura finestra
 
 	bottchiudi = Gtk::Button.new( "Chiudi" )

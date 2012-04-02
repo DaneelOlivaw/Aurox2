@@ -95,13 +95,14 @@ def mascingressi(finestraingr, labelingr, anno)
 
 	labelnazprov = Gtk::Label.new("Nazione di provenienza:")
 	boxing5.pack_start(labelnazprov, false, false, 5)
-	listanazprov = Gtk::ListStore.new(Integer, String, String)
+	listanazprov = Gtk::ListStore.new(Integer, String, String, Integer)
 	selnazprov = Nazprovs.find(:all, :order => "nome")
 	Nazprovs.tutti.each do |np|
 	iter1 = listanazprov.append
 	iter1[0] = np.id.to_i
 	iter1[1] = np.nome
 	iter1[2] = np.codice
+	iter1[3] = np.tipo.to_i
 	end
 
 	@combonazprov = Gtk::ComboBox.new(listanazprov)
@@ -156,6 +157,7 @@ def mascingressi(finestraingr, labelingr, anno)
 #	}
 
 	@certsan.signal_connect("changed") {
+		@dataing.text = @dataing.text + @giorno.strftime("%y").to_s if @dataing.text.length == 4
 		if @combonazprov.active_iter[3] == 1
 			annoing = @giorno.strftime("%Y")[0,2] + @dataing.text[4,2]
 			@testocertsan.text=("INTRA." + "#{@combonazprov.active_iter[2]}" + "." + "#{annoing}" + "." + "#{@certsan.text}")
@@ -187,6 +189,7 @@ def mascingressi(finestraingr, labelingr, anno)
 	bottinserisci.signal_connect("clicked") {
 		begin
 			errore = 0
+			@dataing.text = @dataing.text + @giorno.strftime("%y").to_s if @dataing.text.length == 4
 			@dataingingl = @dataing.text[4,2] + @dataing.text[2,2] + @dataing.text[0,2]
 			@dataingingl = Time.parse("#{@dataingingl}").strftime("%Y")[0,2] + @dataingingl
 			if @dataing.text.to_i == 0 #and 
@@ -199,6 +202,7 @@ def mascingressi(finestraingr, labelingr, anno)
 				Errore.avviso(mingressi, "Data mod.4 sbagliata.")
 				errore = 1
 			elsif @datamod4.text != "" and @datamod4.text.to_i != 0
+				@datamod4.text = @datamod4.text + @giorno.strftime("%y").to_s if @datamod4.text.length == 4
 				@datamod4ingl = @datamod4.text[4,2] + @datamod4.text[2,2] + @datamod4.text[0,2]
 				@datamod4ingl = Time.parse("#{@datamod4ingl}").strftime("%Y")[0,2] + @datamod4ingl
 				#puts Time.parse("#{@datamod4ingl}").strftime("%Y")
@@ -229,8 +233,8 @@ def mascingressi(finestraingr, labelingr, anno)
 			@depositoingr["rifloc"] = @rifloc.text.upcase
 #			Animals.create(:relaz_id => "#{@stallaoper.to_i}", :tipo => "I", :cm_ing => "#{@comboing.active_iter[0]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@comborazze.active_iter[0]}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :naz_orig => "#{@combonazorig.active_iter[2]}", :naz_nasprimimp => "#{@combonaznas.active_iter[2]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@dataingingl.to_i}", :allevamenti_id => "#{@idallprov}", :naz_prov => "#{@combonazprov.active_iter[2]}", :mod4 => "#{@comboallprov.active_iter[3] + "/" + @giorno.strftime("%Y") + "/" + @mod4.text}", :data_mod4 => "#{@datamod4ingl.to_i}", :certsan => "#{@testocertsan.text.upcase}", :rifloc => "#{@rifloc.text.upcase}")
 			@depositoingr["progreg"] += 1
-			Animals.create(:relaz_id => "#{@stallaoper.id.to_i}", :progreg => "#{@depositoingr["progreg"]}/#{anno}", :ingresso_id => "#{@comboing.active_iter[0]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@razzaid}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :nazorig_id => "#{@combonazorig.active_iter[0]}", :naznasprimimp_id => "#{@combonaznas.active_iter[0]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@dataingingl.to_i}", :allevingr_id => "#{@idallprov}", :nazprov_id => "#{@combonazprov.active_iter[0]}", :mod4ingr => "#{@comboallprov.active_iter[3] + "/" + Time.parse("#{@datamod4ingl}").strftime("%Y") + "/" + @mod4.text}", :data_mod4ingr => "#{@datamod4ingl.to_i}", :certsaningr => "#{@testocertsan.text.upcase}", :rifloc => "#{@rifloc.text.upcase}", :contatori_id => "#{@stallaoper.contatori.id}")
-			Contatoris.update(@stallaoper.contatori.id, { :progreg => "#{@depositoingr["progreg"]}/#{anno}"})
+			Animals.create(:relaz_id => "#{@stallaoper.id.to_i}", :progreg => "#{@depositoingr["progreg"]}/#{anno}", :ingresso_id => "#{@comboing.active_iter[0]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@razzaid}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :nazorig_id => "#{@combonazorig.active_iter[0]}", :naznasprimimp_id => "#{@combonaznas.active_iter[0]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@dataingingl.to_i}", :allevingr_id => "#{@idallprov}", :nazprov_id => "#{@combonazprov.active_iter[0]}", :mod4ingr => "#{@comboallprov.active_iter[3] + "/" + Time.parse("#{@datamod4ingl}").strftime("%Y") + "/" + @mod4.text}", :data_mod4ingr => "#{@datamod4ingl.to_i}", :certsaningr => "#{@testocertsan.text.upcase}", :rifloc => "#{@rifloc.text.upcase}")
+			Relazs.update(@stallaoper.id, { :progreg => "#{@depositoingr["progreg"]}/#{anno}"})
 			@containgressi -=1
 			labelingr.text = ("Totale capi da inserire: #{@containgressi}")
 			#@comborazze.active = -1

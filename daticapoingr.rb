@@ -399,10 +399,18 @@ def inscapo(progr, anno)
 
 	bottmoving = Gtk::Button.new("Dati ingresso")
 	bottmoving.signal_connect("clicked") {
+#		puts "Tasto"
+#		puts @nascita.text
+#		puts @giorno.strftime("%y")
 		begin
+			#puts @nascita.text
+			#puts @nascita.text.length
 			if @nascita.text != nil
+				@nascita.text = @nascita.text + @giorno.strftime("%y").to_s if @nascita.text.length == 4
 				@datanasingl = @nascita.text[4,2] + @nascita.text[2,2] + @nascita.text[0,2]
 				@datanasingl = Time.parse("#{@datanasingl}").strftime("%Y")[0,2] + @datanasingl
+				#puts @nascita.text
+				#puts @datanasingl
 			end
 			if errore != 2
 				errore = 0
@@ -425,9 +433,11 @@ def inscapo(progr, anno)
 				Errore.avviso(finestraingr, "Data di nascita errata.")
 				errore = 1
 			elsif Time.parse("#{@datanasingl}") > @giorno
+					#puts "Mbè?"
 					Errore.avviso(finestraingr, "La data di nascita non può essere successiva al giorno odierno.")
 					errore = 1
 			elsif @marcatura.text != "" and @marcatura.text.to_i != 0
+				@marcatura.text = @marcatura.text + @giorno.strftime("%y").to_s if @marcatura.text.length == 4
 				@datamarcingl = @marcatura.text[4,2] + @marcatura.text[2,2] + @marcatura.text[0,2]
 				@datamarcingl = Time.parse("#{@datamarcingl}").strftime("%Y")[0,2] + @datamarcingl
 				if Time.parse("#{@datamarcingl}") < Time.parse("#{@datanasingl}")
@@ -442,6 +452,7 @@ def inscapo(progr, anno)
 				@datamarcingl = ""
 			end
 		rescue Exception => errore
+			#puts errore
 			Errore.avviso(finestraingr, "Controllare le date")
 		end
 		if errore == 0
@@ -484,6 +495,7 @@ def inscapo(progr, anno)
 						errore = 0
 					end
 					if @nascita.text != nil
+						@nascita.text = @nascita.text + @giorno.strftime("%y").to_s if @nascita.text.length == 4
 						@datanasingl = @nascita.text[4,2] + @nascita.text[2,2] + @nascita.text[0,2]
 						@datanasingl = Time.parse("#{@datanasingl}").strftime("%Y")[0,2] + @datanasingl
 					else
@@ -505,12 +517,14 @@ def inscapo(progr, anno)
 						Errore.avviso(finestraingr, "Data di nascita errata.")
 						errore = 1
 					elsif Time.parse("#{@datanasingl}") > @giorno
+						#puts "Errore ins consecutivo"
 						Errore.avviso(finestraingr, "La data di nascita non può essere successiva al giorno odierno.")
 						errore = 1
 					elsif Time.parse("#{@datanasingl}") > Time.parse("#{@depositoingr["dataingr"]}")
 						Errore.avviso(finestraingr, "La data di nascita non può essere successiva alla data di ingresso.")
 						errore = 1
 					elsif @marcatura.text != "" and @marcatura.text.to_i != 0
+						@marcatura.text = @marcatura.text + @giorno.strftime("%y").to_s if @marcatura.text.length == 4
 						@datamarcingl = @marcatura.text[4,2] + @marcatura.text[2,2] + @marcatura.text[0,2]
 						@datamarcingl = Time.parse("#{@datamarcingl}").strftime("%Y")[0,2] + @datamarcingl
 						if Time.parse("#{@datamarcingl}") < Time.parse("#{@datanasingl}")
@@ -544,8 +558,8 @@ def inscapo(progr, anno)
 						@depositoingr["iscrlibgen"] = @valgen
 						@depositoingr["embryo"] = @valembryo
 						@depositoingr["progreg"] += 1
-						Animals.create(:relaz_id => "#{@stallaoper.id.to_i}", :progreg => "#{@depositoingr["progreg"]}/#{anno}", :ingresso_id => "#{@depositoingr["ingresso"]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@razzaid}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :nazorig_id => "#{@combonazorig.active_iter[0]}", :naznasprimimp_id => "#{@combonaznas.active_iter[0]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@depositoingr["dataingr"]}", :nazprov_id => "#{@depositoingr["nazprov"]}", :certsaningr => "#{@depositoingr["certsan"]}", :rifloc => "#{@depositoingr["rifloc"]}", :allevingr_id => "#{@depositoingr["idallprov"]}", :mod4ingr => "#{@depositoingr["mod4"]}", :data_mod4ingr => "#{@depositoingr["datamod4"]}", :contatori_id => "#{@stallaoper.contatori.id}") #:stalla_prov => "#{@depositoingr["stallaprov"]}"
-						Contatoris.update(@stallaoper.contatori.id, { :progreg => "#{@depositoingr["progreg"]}/#{anno}"})
+						Animals.create(:relaz_id => "#{@stallaoper.id.to_i}", :progreg => "#{@depositoingr["progreg"]}/#{anno}", :ingresso_id => "#{@depositoingr["ingresso"]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@razzaid}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :nazorig_id => "#{@combonazorig.active_iter[0]}", :naznasprimimp_id => "#{@combonaznas.active_iter[0]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@depositoingr["dataingr"]}", :nazprov_id => "#{@depositoingr["nazprov"]}", :certsaningr => "#{@depositoingr["certsan"]}", :rifloc => "#{@depositoingr["rifloc"]}", :allevingr_id => "#{@depositoingr["idallprov"]}", :mod4ingr => "#{@depositoingr["mod4"]}", :data_mod4ingr => "#{@depositoingr["datamod4"]}") #:stalla_prov => "#{@depositoingr["stallaprov"]}"
+						Relazs.update(@stallaoper.id, { :progreg => "#{@depositoingr["progreg"]}/#{anno}"})
 						labelultima.set_markup("<b>Ultima marca inserita: #{@depositoingr["marca"]}</b>")
 						@marca.text = ""
 						@nascita.text = ""
@@ -611,6 +625,7 @@ def inscapo(progr, anno)
 						errore = 0
 					end
 					if @nascita.text != nil
+						@nascita.text = @nascita.text + @giorno.strftime("%y").to_s if @nascita.text.length == 4
 						@datanasingl = @giorno.strftime("%Y")[0,2] + @nascita.text[4,2] + @nascita.text[2,2] + @nascita.text[0,2]
 					else
 					end
@@ -633,12 +648,14 @@ def inscapo(progr, anno)
 						Errore.avviso(finestraingr, "Data di nascita errata.")
 						errore = 1
 					elsif Time.parse("#{@datanasingl}") > @giorno
+						#puts "consecutivo veloce"
 						Errore.avviso(finestraingr, "La data di nascita non può essere successiva al giorno odierno.")
 						errore = 1
 					elsif Time.parse("#{@datanasingl}") > Time.parse("#{@depositoingr["dataingr"]}")
 						Errore.avviso(finestraingr, "La data di nascita non può essere successiva alla data di ingresso.")
 						errore = 1
 					elsif @marcatura.text != "" and @marcatura.text.to_i != 0
+						@marcatura.text = @marcatura.text + @giorno.strftime("%y").to_s if @marcatura.text.length == 4
 						@datamarcingl = @giorno.strftime("%Y")[0,2] + @marcatura.text[4,2] + @marcatura.text[2,2] + @marcatura.text[0,2]
 						if Time.parse("#{@datamarcingl}") < Time.parse("#{@datanasingl}")
 							Errore.avviso(finestraingr, "La data di marcatura non può essere minore della data di nascita.")
@@ -662,8 +679,8 @@ def inscapo(progr, anno)
 						@depositoingr["madre"] = @madre.text.upcase
 						@depositoingr["iscrlibgen"] = @valgen
 						@depositoingr["progreg"] += 1
-						Animals.create(:relaz_id => "#{@stallaoper.id.to_i}", :progreg => "#{@depositoingr["progreg"]}/#{anno}", :ingresso_id => "#{@depositoingr["ingresso"]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@depositoingr["specie"]}", :razza_id => "#{@razzaid}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@depositoingr["stallanascita"]}", :sesso => "#{@valsesso}", :nazorig_id => "#{@depositoingr["nazorig"]}", :naznasprimimp_id => "#{@depositoingr["naznasprimimp"]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@depositoingr["iscrlibgen"]}", :embryo => "#{@depositoingr["embryo"]}", :marca_madre => "#{@madre.text.upcase}", :data_ingr => "#{@depositoingr["dataingr"]}", :nazprov_id => "#{@depositoingr["nazprov"]}", :certsaningr => "#{@depositoingr["certsan"]}", :rifloc => "#{@depositoingr["rifloc"]}", :allevingr_id => "#{@depositoingr["idallprov"]}", :mod4ingr => "#{@depositoingr["mod4"]}", :data_mod4ingr => "#{@depositoingr["datamod4"]}", :contatori_id => "#{@stallaoper.contatori.id}") #:stalla_prov => "#{@depositoingr["stallaprov"]}"
-						Contatoris.update(@stallaoper.contatori.id, { :progreg => "#{@depositoingr["progreg"]}/#{anno}"})
+						Animals.create(:relaz_id => "#{@stallaoper.id.to_i}", :progreg => "#{@depositoingr["progreg"]}/#{anno}", :ingresso_id => "#{@depositoingr["ingresso"]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@depositoingr["specie"]}", :razza_id => "#{@razzaid}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@depositoingr["stallanascita"]}", :sesso => "#{@valsesso}", :nazorig_id => "#{@depositoingr["nazorig"]}", :naznasprimimp_id => "#{@depositoingr["naznasprimimp"]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@depositoingr["iscrlibgen"]}", :embryo => "#{@depositoingr["embryo"]}", :marca_madre => "#{@madre.text.upcase}", :data_ingr => "#{@depositoingr["dataingr"]}", :nazprov_id => "#{@depositoingr["nazprov"]}", :certsaningr => "#{@depositoingr["certsan"]}", :rifloc => "#{@depositoingr["rifloc"]}", :allevingr_id => "#{@depositoingr["idallprov"]}", :mod4ingr => "#{@depositoingr["mod4"]}", :data_mod4ingr => "#{@depositoingr["datamod4"]}") #:stalla_prov => "#{@depositoingr["stallaprov"]}"
+						Relazs.update(@stallaoper.id, { :progreg => "#{@depositoingr["progreg"]}/#{anno}"})
 						labelultima.set_markup("<b>Ultima marca inserita: #{@depositoingr["marca"]}</b>")
 						@marca.text = ""
 						@nascita.text = ""

@@ -142,7 +142,7 @@ def datiuscita(finestra, muscite, listasel, combousc)
 	labelmod4usc = Gtk::Label.new("Modello 4:")
 	boxusc8.pack_start(labelmod4usc, false, false, 5)
 	mod4usc = Gtk::Entry.new()
-	progmod4 = @stallaoper.contatori.mod4usc.split("/")
+	progmod4 = @stallaoper.mod4usc.split("/")
 	progmod41 = progmod4[0].to_i
 #	anno = @giorno.strftime("%y")
 #		if progmod4[1].to_i == anno.to_i
@@ -162,18 +162,29 @@ def datiuscita(finestra, muscite, listasel, combousc)
 	datamod4usc = Gtk::Entry.new()
 	datamod4usc.max_length=(6)
 	boxusc8.pack_start(datamod4usc, false, false, 5)
-
-	datausc.signal_connect("changed") {
-		datamod4usc.text =("#{datausc.text}")
-		if datausc.cursor_position == 5
-			if datausc.text[4,2] == progmod4[1]
-				nmod4 = progmod41 + 1
-			else
-				nmod4 = 1
-			end
-		mod4usc.text = ("#{nmod4}")
+	datausc.signal_connect_after("focus-out-event") {
+		#puts "Fuori!"
+		datausc.text = datausc.text + @giorno.strftime("%y").to_s if datausc.text.length == 4
+		if datausc.text[4,2] == progmod4[1]
+			nmod4 = progmod41 + 1
+		else
+			nmod4 = 1
 		end
+		mod4usc.text = ("#{nmod4}")
+		datamod4usc.text =("#{datausc.text}")
 	}
+#	datausc.signal_connect("changed") {
+#		datamod4usc.text =("#{datausc.text}")
+#		if datausc.cursor_position == 5
+#			if datausc.text[4,2] == progmod4[1]
+#				nmod4 = progmod41 + 1
+#			else
+#				nmod4 = 1
+#			end
+#		mod4usc.text = ("#{nmod4}")
+#		end
+#		#datausc.text = datausc.text + @giorno.strftime("%y").to_s if datausc.text.length == 4
+#	}
 
 	#Bottone di inserimento uscite
 
@@ -268,8 +279,8 @@ def datiuscita(finestra, muscite, listasel, combousc)
 			#Animals.update(marcauscid, { :uscito => "1", :idcoll => "#{usc.id}"})
 			Animals.update(marcauscid, {:uscita => "#{datauscingl}", :uscite_id => "#{combousc.active_iter[0]}", :allevusc_id => "#{idalldest}", :nazdest_id => "#{valcombonazdest}", :trasportatori_id => "#{valcombotrasp}", :mod4usc => "#{mod4}", :data_mod4usc => "#{datamod4uscingl.to_i}", :marcasost => "#{marcasost.text}", :uscito => "1"})
 		end
-		Contatoris.update(@stallaoper.contatori.id, { :mod4usc => "#{mod4usc.text}/#{Time.parse("#{datamod4uscingl}").strftime("%y")}"})
-		@stallaoper.contatori.mod4usc = mod4usc.text + "/" + Time.parse("#{datamod4uscingl}").strftime("%y")
+		Relazs.update(@stallaoper.id, { :mod4usc => "#{mod4usc.text}/#{Time.parse("#{datamod4uscingl}").strftime("%y")}"})
+		@stallaoper.mod4usc = mod4usc.text + "/" + Time.parse("#{datamod4uscingl}").strftime("%y")
 		Conferma.conferma(mdatiuscita, "Capi usciti correttamente.")
 		if alldir.length > 0
 			#puts "Trasf. diretto"

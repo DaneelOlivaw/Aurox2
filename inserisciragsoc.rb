@@ -30,7 +30,7 @@ def crearagsoc(finestra)
 		if tipoidfisc1.active?
 			tipoidfisc="F"
 			iftab = "codfisc"
-		idfisc.max_length=(16)
+			idfisc.max_length=(16)
 		end
 	}
 	boxcrearagsoc2.pack_start(tipoidfisc1, false, false, 5)

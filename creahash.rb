@@ -1,5 +1,5 @@
 def creahash(selezione)
-	puts "creahash"
+	#puts "creahash"
 	#puts selezione.inspect
 	selezione.each do |m|
 		if m.data_applm !=nil
@@ -115,7 +115,7 @@ def creahash(selezione)
 		else
 			data_mod4usc = ""
 		end
-		puts stampacar
+		#puts stampacar
 		Hash["id", m.id.to_i, "progreg", m.progreg, "ragsoc", m.relaz.ragsoc.ragsoc, "marca", m.marca, "specie", m.specie, "razza", m.razza.razza, "data_nas", m.data_nas.strftime("%d/%m/%Y"), "stalla_nas", m.stalla_nas, "sesso", m.sesso, "nazorig", m.nazorig.codice, "naznasprimimp", m.naznasprimimp.codice, "data_applm", data_applm, "ilg", m.ilg, "marca_prec", m.marca_prec, "marca_madre", m.marca_madre, "marca_padre", m.marca_padre, "donatrice", m.donatrice, "ingresso", m.ingresso.descr, "data_ingr", m.data_ingr, "allevingrcod317", allevingrcod317, "allevingrragsoc", allevingrragsoc, "allevingridfisc", allevingridfisc, "allevusccod317", allevusccod317, "allevuscragsoc", allevuscragsoc, "allevuscidfisc", allevuscidfisc, "nazprov", nazprov, "certsaningr", m.certsaningr, "rifloc", m.rifloc, "data_certsaningr", data_certsaningr, "mod4ingr", m.mod4ingr, "data_mod4ingr", data_mod4ingr, "uscitedescr", uscitedescr, "uscita", uscita, "nazdest", nazdest, "macellinome", macellinome, "macelliif", macelliif, "macellibollo", macellibollo, "macelliregion", macelliregion, "certsanusc", m.certsanusc, "data_certsanusc", data_certsanusc, "marcasost", m.marcasost, "ditta_racc", m.ditta_racc, "clg", m.clg, "fileingr", fileingr, "fileusc", fileusc, "stampacar", stampacar, "stampascar", stampascar, "mod4usc", m.mod4usc, "data_mod4usc", data_mod4usc]
 		
 

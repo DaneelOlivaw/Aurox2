@@ -36,19 +36,19 @@ def modprop
 	end
 
 	caricaprop
-	@comboprop = Gtk::ComboBox.new(@listaprop)
+	comboprop = Gtk::ComboBox.new(@listaprop)
 	renderer1 = Gtk::CellRendererText.new
-	@comboprop.pack_start(renderer1,false)
-	@comboprop.set_attributes(renderer1, :text => 1)
-	boxmodprop1.pack_start(@comboprop.popdown, false, false, 0)
+	comboprop.pack_start(renderer1,false)
+	comboprop.set_attributes(renderer1, :text => 1)
+	boxmodprop1.pack_start(comboprop.popdown, false, false, 0)
 
 	#Nome proprietario
 
 	labelnomeprop = Gtk::Label.new("Nome proprietario:")
 	boxmodprop2.pack_start(labelnomeprop, false, false, 5)
-	@nomeprop = Gtk::Entry.new()
-	@nomeprop.max_length=(50)
-	boxmodprop2.pack_start(@nomeprop, false, false, 5)
+	nomeprop = Gtk::Entry.new()
+	nomeprop.max_length=(50)
+	boxmodprop2.pack_start(nomeprop, false, false, 5)
 
 	#Tipo di identificativo fiscale
 
@@ -56,15 +56,14 @@ def modprop
 	boxmodprop3.pack_start(labeltipoif, false, false, 5)
 	tipoif1 = Gtk::RadioButton.new("Codice fiscale")
 	idfisc = Gtk::Entry.new()
-	@idfisc = Gtk::Entry.new()
 	tipoif1.active=(true)
 	tipoif="F"
-	@idfisc.max_length=(16)
+	idfisc.max_length=(16)
 	tipoif1.signal_connect("toggled") {
 		if tipoif1.active?
 			tipoif="F"
 			#puts tipoif
-			@idfisc.max_length=(16)
+			idfisc.max_length=(16)
 		end
 	}
 	boxmodprop3.pack_start(tipoif1, false, false, 5)
@@ -73,7 +72,7 @@ def modprop
 		if tipoif2.active?
 			tipoif="I"
 			#puts tipoif
-			@idfisc.max_length=(11)
+			idfisc.max_length=(11)
 		end
 	}
 	boxmodprop3.pack_start(tipoif2, false, false, 5)
@@ -81,24 +80,24 @@ def modprop
 	#Identificativo fiscale
 
 	labelidfisc = Gtk::Label.new("Identificativo fiscale:")
-	boxmodprop3.pack_start(labelidfisc, false, false, 5)
-	@idfisc = Gtk::Entry.new()
-#	@idfisc.max_length=(16)
-	boxmodprop3.pack_start(@idfisc, false, false, 5)
+	boxmodprop4.pack_start(labelidfisc, false, false, 5)
+	idfisc = Gtk::Entry.new()
+#	idfisc.max_length=(16)
+	boxmodprop4.pack_start(idfisc, false, false, 5)
 
-	@comboprop.signal_connect( "changed" ) {
-		@nomeprop.text=("#{@comboprop.active_iter[1]}")
-		@idfisc.text=("#{@comboprop.active_iter[2]}")
-#		tipoif1.active=("#{@comboprop.active_iter[4]}")
-		tipoif = @comboprop.active_iter[4]
-		if @comboprop.active_iter[4] == "F"
+	comboprop.signal_connect( "changed" ) {
+		nomeprop.text=("#{comboprop.active_iter[1]}")
+		idfisc.text=("#{comboprop.active_iter[2]}")
+#		tipoif1.active=("#{comboprop.active_iter[4]}")
+		tipoif = comboprop.active_iter[4]
+		if comboprop.active_iter[4] == "F"
 			tipoif1.active=(true)
-			@idfisc.max_length=(16)
-			@idfisc.text=("#{@comboprop.active_iter[2]}")
+			idfisc.max_length=(16)
+			idfisc.text=("#{comboprop.active_iter[2]}")
 		else
 			tipoif2.active=(true)
-			@idfisc.max_length=(11)
-			@idfisc.text=("#{@comboprop.active_iter[3]}")
+			idfisc.max_length=(11)
+			idfisc.text=("#{comboprop.active_iter[3]}")
 		end
 	}
 
@@ -106,25 +105,48 @@ def modprop
 
 	inserisciprop = Gtk::Button.new( "Modifica proprietario" )
 	inserisciprop.signal_connect("clicked") {
-		if @nomeprop.text==("") or @idfisc.text==("")
+		if nomeprop.text==("") or idfisc.text==("")
 			Errore.avviso(mmodprop, "Servono tutti i dati.")
 		else
 			if tipoif == "F"
-				Props.update(@comboprop.active_iter[0], { :prop => "#{@nomeprop.text.upcase}", :codfisc => "#{@idfisc.text.upcase}", :idf => "#{tipoif}"})
-				@nomeprop.text=("")
-				@idfisc.text=("")
+				Props.update(comboprop.active_iter[0], { :prop => "#{nomeprop.text.upcase}", :codfisc => "#{idfisc.text.upcase}", :idf => "#{tipoif}"})
+				nomeprop.text=("")
+				idfisc.text=("")
 				caricaprop
-				@comboprop.model=(@listaprop)
+				comboprop.model=(@listaprop)
 			else
-				Props.update(@comboprop.active_iter[0], { :prop => "#{@nomeprop.text.upcase}", :piva => "#{@idfisc.text.upcase}", :idf => "#{tipoif}"})
-				@nomeprop.text=("")
-				@idfisc.text=("")
+				Props.update(comboprop.active_iter[0], { :prop => "#{nomeprop.text.upcase}", :piva => "#{idfisc.text.upcase}", :idf => "#{tipoif}"})
+				nomeprop.text=("")
+				idfisc.text=("")
 				caricaprop
-				@comboprop.model=(@listaprop)
+				comboprop.model=(@listaprop)
 			end
 		end
 	}
 	boxmodprop5.pack_start(inserisciprop, false, false, 0)
+
+	bottelimina = Gtk::Button.new( "Elimina" )
+	bottelimina.signal_connect("clicked") {
+		#puts Relazs.count(:conditions => ["prop_id = ?", comboprop.active_iter[0]])
+		if Relazs.count(:conditions => ["prop_id = ?", comboprop.active_iter[0]]) == 0
+			avviso = Gtk::MessageDialog.new(mmodprop, Gtk::Dialog::DESTROY_WITH_PARENT, Gtk::MessageDialog::QUESTION, Gtk::MessageDialog::BUTTONS_YES_NO, "Proseguo con l'eleminazione del proprietario?")
+			risposta = avviso.run
+			avviso.destroy
+			if risposta == Gtk::Dialog::RESPONSE_YES
+				Props.delete(comboprop.active_iter[0])
+				Conferma.conferma(mmodprop, "Proprietario eliminato.")
+				nomeprop.text=("")
+				idfisc.text=("")
+				caricaprop
+				comboprop.model=(@listaprop)
+			else
+				Conferma.conferma(mmodprop, "Operazione annullata.")
+			end
+		else
+			Conferma.conferma(mmodprop, "Il proprietario non può essere eliminato perché in uso.")
+		end
+	}
+	boxmodprop5.pack_start(bottelimina, false, false, 0)
 
 	#Bottone di chiusura finestra
 

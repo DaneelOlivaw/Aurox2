@@ -1,4 +1,5 @@
 database.rb
+stampapresgiorni_v.rb
 *~*
 altro/
 esportadb/
@@ -8,3 +9,4 @@ invio/
 registro/
 regnv/
 vidim/
+storico/

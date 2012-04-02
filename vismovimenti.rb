@@ -20,7 +20,7 @@ def vismovimenti
 			itermov = lista.append
 			itermov[0] = m.id.to_i
 			itermov[1] = m.progreg
-			itermov[2] = m.relaz.ragsoc.ragsoc
+#			itermov[2] = m.relaz.ragsoc.ragsoc
 			itermov[3] = m.marca
 			itermov[4] = m.specie
 			itermov[5] = m.razza.razza
@@ -165,7 +165,7 @@ def vismovimenti
 			itermov = lista.append
 			itermov[0] = m["id"]
 			itermov[1] = m["progreg"]
-			itermov[2] = m["ragsoc"]
+#			itermov[2] = m["ragsoc"]
 			itermov[3] = m["marca"]
 			itermov[4] = m["specie"]
 			itermov[5] = m["razza"]
@@ -269,8 +269,8 @@ def vismovimenti
 		cella = Gtk::CellRendererText.new
 		colonna1 = Gtk::TreeViewColumn.new("Progressivo", cella)
 		colonna1.resizable = true
-		colonna2 = Gtk::TreeViewColumn.new("Ragione sociale", cella)
-		colonna2.resizable = true
+#		colonna2 = Gtk::TreeViewColumn.new("Ragione sociale", cella)
+#		colonna2.resizable = true
 		colonna3 = Gtk::TreeViewColumn.new("Marca", cella)
 		colonna4 = Gtk::TreeViewColumn.new("Specie", cella)
 		colonna5 = Gtk::TreeViewColumn.new("Razza", cella)
@@ -319,7 +319,7 @@ def vismovimenti
 		colonna47 = Gtk::TreeViewColumn.new("Stampa registro ingresso", cella)
 		colonna48 = Gtk::TreeViewColumn.new("Stampa registro uscita", cella)
 		colonna1.set_attributes(cella, :text => 1)
-		colonna2.set_attributes(cella, :text => 2)
+#		colonna2.set_attributes(cella, :text => 2)
 		colonna3.set_attributes(cella, :text => 3)
 		colonna4.set_attributes(cella, :text => 4)
 		colonna5.set_attributes(cella, :text => 5)
@@ -373,7 +373,7 @@ def vismovimenti
 		colonna47.set_attributes(cella, :text => 49)
 		colonna48.set_attributes(cella, :text => 50)
 		vista.append_column(colonna1)
-		vista.append_column(colonna2)
+#		vista.append_column(colonna2)
 		vista.append_column(colonna3)
 		vista.append_column(colonna4)
 		vista.append_column(colonna5)

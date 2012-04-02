@@ -52,7 +52,7 @@ def mascregnonvidim
 		#if Animals.find(:all, :conditions => ["contatori_id= ? and uscite_id != 'null' and YEAR(uscita) = ?", "#{@stallaoper.contatori_id}", "#{comboanno.active_iter[0]}"], :order => ["uscita, id"]).length == 0
 		#	Conferma.conferma(mregnonvidim, "Nessun capo presente.")
 		#else
-			registrouscnv(mregnonvidim, @stallaoper.contatori_id, comboanno.active_iter[0])
+			registrouscnv(mregnonvidim, @stallaoper.id, comboanno.active_iter[0])
 		#end
 	}
 	stamparegnv.signal_connect("clicked") {
@@ -60,7 +60,7 @@ def mascregnonvidim
 		#if Animals.find(:all, :conditions => ["contatori_id= ? and uscito = ? and YEAR(uscita) = ?", "#{@stallaoper.contatori_id}", "1", "#{comboanno.active_iter[0]}"], :order => ["data_ingr, id"]).length == 0
 		#	Conferma.conferma(mregnonvidim, "Nessun capo presente.")
 		#else
-			registronv(mregnonvidim, @stallaoper.contatori_id, comboanno.active_iter[0])
+			registronv(mregnonvidim, @stallaoper.id, comboanno.active_iter[0])
 		#end
 	}
 	bottchiudi = Gtk::Button.new( "Chiudi" )
@@ -72,7 +72,7 @@ def mascregnonvidim
 end
 
 def registroingrnv(anno)
-	capi = Animals.stamparegistroingrnv(@stallaoper.contatori_id, anno)
+	capi = Animals.stamparegistroingrnv(@stallaoper.id, anno)
 	if capi.length > 0
 		#foglio = PDF::Writer.new(:paper => "A4") # , :font_size => 5)
 		foglio = Prawn::Document.new(:page_size => "A4", :top_margin => 15.mm, :left_margin => 10.mm, :right_margin => 10.mm, :bottom_margin => 10.mm, :compress => true, :info => {:Title => "Registro non vidimato di ingresso", :Author => "Aurox",:Creator => "Aurox", :Producer => "Prawn", :CreationDate => Time.now}) #.generate "altro/prova2.pdf" do

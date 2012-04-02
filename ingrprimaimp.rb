@@ -75,6 +75,7 @@ def mascprimimp(finestraingr, labelingr, anno)
 	@testocertsan.width_chars=(21)
 	boxprimimp7.pack_start(@testocertsan, false, false, 5)
 	@certsan.signal_connect("changed") {
+		@dataing.text = @dataing.text + @giorno.strftime("%y").to_s if @dataing.text.length == 4
 		if @combonazprov.active_iter[3] == 1
 			annoing = @giorno.strftime("%Y")[0,2] + @dataing.text[4,2]
 			@testocertsan.text=("INTRA." + "#{@combonazprov.active_iter[2]}" + "." + "#{annoing}" + "." + "#{@certsan.text}")
@@ -109,6 +110,7 @@ def mascprimimp(finestraingr, labelingr, anno)
 	bottinserisci.signal_connect("clicked") {
 		begin
 			errore = 0
+			@dataing.text = @dataing.text + @giorno.strftime("%y").to_s if @dataing.text.length == 4
 			@dataingingl = @dataing.text[4,2] + @dataing.text[2,2] + @dataing.text[0,2]
 			@dataingingl = Time.parse("#{@dataingingl}").strftime("%Y")[0,2] + @dataingingl
 			if @dataing.text.to_i == 0 
@@ -133,8 +135,8 @@ def mascprimimp(finestraingr, labelingr, anno)
 			#puts @depositoingr["progreg"]
 			@depositoingr["progreg"] += 1
 #			Animals.create(:relaz_id => "#{@stallaoper.to_i}", :tipo => "I", :cm_ing => "#{@comboing.active_iter[0]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@comborazze.active_iter[0]}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :naz_orig => "#{@combonazorig.active_iter[2]}", :naz_nasprimimp => "#{@combonaznas.active_iter[2]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@dataingingl.to_i}", :naz_prov => "#{@combonazprov.active_iter[2]}", :certsan => "#{@testocertsan.text.upcase}", :rifloc => "#{@rifloc.text.upcase}")
-			Animals.create(:relaz_id => "#{@stallaoper.id.to_i}", :progreg => "#{@depositoingr["progreg"]}/#{anno}", :ingresso_id => "#{@comboing.active_iter[0]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@razzaid}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :nazorig_id => "#{@combonazorig.active_iter[0]}", :naznasprimimp_id => "#{@combonaznas.active_iter[0]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@dataingingl.to_i}", :nazprov_id => "#{@combonazprov.active_iter[0]}", :certsaningr => "#{@testocertsan.text.upcase}", :rifloc => "#{@rifloc.text.upcase}", :contatori_id => "#{@stallaoper.contatori.id}")
-			Contatoris.update(@stallaoper.contatori.id, { :progreg => "#{@depositoingr["progreg"]}/#{anno}"})
+			Animals.create(:relaz_id => "#{@stallaoper.id.to_i}", :progreg => "#{@depositoingr["progreg"]}/#{anno}", :ingresso_id => "#{@comboing.active_iter[0]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@razzaid}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :nazorig_id => "#{@combonazorig.active_iter[0]}", :naznasprimimp_id => "#{@combonaznas.active_iter[0]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@dataingingl.to_i}", :nazprov_id => "#{@combonazprov.active_iter[0]}", :certsaningr => "#{@testocertsan.text.upcase}", :rifloc => "#{@rifloc.text.upcase}")
+			Relazs.update(@stallaoper.id, { :progreg => "#{@depositoingr["progreg"]}/#{anno}"})
 			@containgressi -=1
 			labelingr.text = ("Totale capi da inserire: #{@containgressi}")
 #			@comborazze.active = -1

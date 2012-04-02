@@ -14,6 +14,7 @@ def insautomatico(finestra, listasel, alldestragsoc, alldest317, alldir, motivou
 	boxinsaut6 = Gtk::HBox.new(false, 5)
 	boxinsaut7 = Gtk::HBox.new(false, 5)
 	boxinsaut8 = Gtk::HBox.new(false, 5)
+	boxinsaut9 = Gtk::HBox.new(false, 5)
 	boxinsautv.pack_start(boxinsaut1, false, false, 5)
 	boxinsautv.pack_start(boxinsaut2, false, false, 5)
 	boxinsautv.pack_start(boxinsaut3, false, false, 5)
@@ -22,9 +23,12 @@ def insautomatico(finestra, listasel, alldestragsoc, alldest317, alldir, motivou
 	boxinsautv.pack_start(boxinsaut6, false, false, 5)
 	boxinsautv.pack_start(boxinsaut7, false, false, 5)
 	boxinsautv.pack_start(boxinsaut8, false, false, 5)
+	boxinsautv.pack_start(boxinsaut9, false, false, 5)
 	minsaut.add(boxinsautv)
 
-	listaprop = Gtk::ListStore.new(Integer, String, Integer, String, String, Integer)
+	listadet = Gtk::ListStore.new(Integer, String, Integer)
+	combodet = Gtk::ComboBox.new(listadet)
+	listaprop = Gtk::ListStore.new(Integer, String, Integer, String, String)
 	comboprop = Gtk::ComboBox.new(listaprop)
 	labelstalla = Gtk::Label.new("Stalla di destinazione:")
 	boxinsaut1.pack_start(labelstalla, false, false, 5)
@@ -43,14 +47,73 @@ def insautomatico(finestra, listasel, alldestragsoc, alldest317, alldir, motivou
 	#prop = Relazs.find(:all, :from => "relazs", :conditions => ["relazs.stalle_id= ?  and relazs.ragsoc_id= ?", "#{combo.active_iter[0]}", "#{combo2.active_iter[2]}"])
 #	labelprop = Gtk::Label.new("Seleziona il proprietario:")
 	alldir.each do |p|
-		iter = listaprop.append
+		iter = listadet.append
 		iter[0] = p.id.to_i
-		iter[1] = p.prop.prop.to_s
-		iter[2] = p.prop_id.to_i
-		iter[3] = p.atp
-		iter[4] = "-"
-		iter[5] = p.contatori_id
+		iter[1] = p.detentori.detentore.to_s
+		iter[2] = p.detentori_id.to_i
+#		iter[3] = p.atp
+#		iter[4] = "-"
+#		iter[5] = p.contatori_id
 	end
+	arrconfronto = []
+	x = nil
+	listadet.each do |modello, percorso, iterat|
+	(iterat[1] == x) and arrconfronto.push(Gtk::TreeRowReference.new(modello, percorso))
+	x = iterat[1]
+	end
+	arrconfronto.each do |rif|
+		(percorso = rif.path) and listadet.remove(listadet.get_iter(percorso))
+	end
+	
+	
+	
+	
+	renderer = Gtk::CellRendererText.new
+	combodet.pack_start(renderer,false)
+	renderer.visible=(false)
+	combodet.set_attributes(renderer, :text => 0)
+	renderer1 = Gtk::CellRendererText.new
+	combodet.pack_start(renderer1,false)
+	combodet.set_attributes(renderer1, :text => 1)
+	renderer2 = Gtk::CellRendererText.new
+	renderer2.visible=(false)
+	combodet.pack_start(renderer2,false)
+	combodet.set_attributes(renderer2, :text => 2)
+	renderer3 = Gtk::CellRendererText.new
+	combodet.pack_start(renderer3,false)
+#	combodet.set_attributes(renderer3, :text => 4)
+#	renderer4 = Gtk::CellRendererText.new
+#	combodet.pack_start(renderer4,false)
+#	combodet.set_attributes(renderer4, :text => 3)
+	labeldet = Gtk::Label.new("Seleziona il detentore di destinazione:")
+	boxinsaut3.pack_start(labeldet, false, false, 5)
+	boxinsaut3.pack_start(combodet, false, false, 0)
+	
+	combodet.signal_connect( "changed" ) {
+		if combodet.active != -1
+			#@idragsoc = combo2.active
+			#seldet = Relazs.find(:all, :from => "relazs", :conditions => ["relazs.stalle_id= ?  and relazs.ragsoc_id= ?", "#{combo.active_iter[0]}", "#{combo2.active_iter[2]}"])
+			selprop = []
+			alldir.each do |a|
+				if a.detentori_id == combodet.active_iter[2]
+					selprop << a
+				end
+			end
+			#puts "selprop"
+			#puts selprop.inspect
+			#seldet = Relazs.find(:all, :from => "props, relazs", :conditions => ["relazs.stalle_id= ?  and relazs.ragsoc_id= ?", "#{combo.active_iter[0]}", "#{combo2.active_iter[2]}"])
+			listaprop.clear
+			selprop.each do |p|
+				iter = listaprop.append
+				iter[0] = p.id.to_i
+				iter[1] = p.prop.prop.to_s
+				iter[2] = p.prop_id.to_i
+				iter[3] = p.atp
+				iter[4] = "-"
+			end
+		end
+	}
+	
 	renderer = Gtk::CellRendererText.new
 	comboprop.pack_start(renderer,false)
 	renderer.visible=(false)
@@ -69,9 +132,8 @@ def insautomatico(finestra, listasel, alldestragsoc, alldest317, alldir, motivou
 	comboprop.pack_start(renderer4,false)
 	comboprop.set_attributes(renderer4, :text => 3)
 	labelprop = Gtk::Label.new("Seleziona il proprietario di destinazione:")
-	boxinsaut3.pack_start(labelprop, false, false, 5)
-	boxinsaut3.pack_start(comboprop, false, false, 0)
-
+	boxinsaut4.pack_start(labelprop, false, false, 5)
+	boxinsaut4.pack_start(comboprop, false, false, 0)
 
 	labeldataingr = Gtk::Label.new("Data ingresso (GGMMAA):")
 	boxinsaut4.pack_start(labeldataingr, false, false, 5)
@@ -140,15 +202,15 @@ def insautomatico(finestra, listasel, alldestragsoc, alldest317, alldir, motivou
 	#Bottone di inserimento ingressi
 
 	bottinserisci = Gtk::Button.new( "Inserisci" )
-	boxinsaut8.pack_start(bottinserisci, false, false, 5)
+	boxinsaut9.pack_start(bottinserisci, false, false, 5)
 	
-#	comboprop.signal_connect( "changed" ) {
-#		if comboprop.active != -1
-#			puts comboprop.active_iter[0]
-#			puts comboprop.active_iter[1]
-#			puts comboprop.active_iter[2]
-#			puts comboprop.active_iter[3]
-#			puts comboprop.active_iter[5]
+#	combodet.signal_connect( "changed" ) {
+#		if combodet.active != -1
+#			puts combodet.active_iter[0]
+#			puts combodet.active_iter[1]
+#			puts combodet.active_iter[2]
+#			puts combodet.active_iter[3]
+#			puts combodet.active_iter[5]
 #		end
 #	}
 	
@@ -156,23 +218,24 @@ def insautomatico(finestra, listasel, alldestragsoc, alldest317, alldir, motivou
 		if comboprop.active == -1
 			Errore.avviso(minsaut, "Seleziona un proprietario.")
 		else
-			#reldest = Relazs.find(:first, :include => [:stalle, :ragsoc, :prop], :conditions => ["stalles.cod317 = ? and ragsocs.ragsoc = ? and props.id = ?", "#{alldest317}", "#{alldestragsoc}", "#{comboprop.active_iter[0]}"])
-			#puts comboprop.active_iter.inspect
+			#reldest = Relazs.find(:first, :include => [:stalle, :ragsoc, :prop], :conditions => ["stalles.cod317 = ? and ragsocs.ragsoc = ? and props.id = ?", "#{alldest317}", "#{alldestragsoc}", "#{combodet.active_iter[0]}"])
+			#puts combodet.active_iter.inspect
 			#puts reldest.inspect
 			#puts reldest.contatori.progreg
 			#relaz = Relazs.find(:first, :conditions => ["stalle_id = ?, " ])
-			
-			progreg = Contatoris.find(:first, :conditions => ["id = ? ", "#{comboprop.active_iter[5]}"]).progreg.split('/')
+			#puts comboprop.active_iter[0]
+			progreg = Relazs.find(:first, :conditions => ["id = ? ", "#{comboprop.active_iter[0]}"]).progreg.split('/')
 			#puts progreg.inspect
 			dataingringl = @giorno.strftime("%Y")[0,2] + dataingr.text[4,2] + dataingr.text[2,2] + dataingr.text[0,2]
+			datamod4ingl = @giorno.strftime("%Y")[0,2] + datamod4ingr.text[4,2] + datamod4ingr.text[2,2] + datamod4ingr.text[0,2]
 			#puts dataingr.text[4,2]
 			#anno = Time.parse("#{progreg[1]}").strftime("%Y")[0,2] + progreg[1]
 			if progreg[1].to_i != dataingr.text[4,2].to_i # and Animals.find(:all, :from => "animals", :conditions => ["relaz_id= ? and tipo= ? and registro= ? and YEAR(data_ingr)= ?", "#{@stallaoper.id}", "I", "0", "#{anno}"]).length != 0 or compusc = Animals.find(:all, :conditions => ["relaz_id= ? and tipo= ? and registro= ? and YEAR(uscita)= ?", "#{@stallaoper.id}", "U", "0", "#{anno}"]).length != 0
 				Errore.avviso(minsaut, "Attenzione: il numero progressivo del registro della stalla #{alldest317} riporta l\'anno #{Time.parse("#{progreg[1]}").strftime("%Y")[0,2] + progreg[1]} mentre la data di ingresso l\'anno #{dataingringl[0,4]}; non è possibile proseguire con l\'inserimento automatico. Controllare i dati e proseguire col caricamento classico.")
 			else
 				#dataingringl = @giorno.strftime("%Y")[0,2] + dataingr.text[4,2] + dataingr.text[2,2] + dataingr.text[0,2]
-				datamod4ingl = @giorno.strftime("%Y")[0,2] + datamod4ingr.text[4,2] + datamod4ingr.text[2,2] + datamod4ingr.text[0,2]
-			#puts comboprop.active_iter[0]
+				#datamod4ingl = @giorno.strftime("%Y")[0,2] + datamod4ingr.text[4,2] + datamod4ingr.text[2,2] + datamod4ingr.text[0,2]
+			#puts combodet.active_iter[0]
 			#puts datamod4ingl
 				progr = progreg[0].to_i
 				listasel.each do |model,path,iter|
@@ -194,13 +257,13 @@ def insautomatico(finestra, listasel, alldestragsoc, alldest317, alldir, motivou
 #				madreusc = iter[13]
 #				padreusc = iter[14]
 				#puts marcausc
-				Animals.create(:relaz_id => "#{comboprop.active_iter[0]}", :progreg => "#{progr}/#{progreg[1]}", :contatori_id => "#{comboprop.active_iter[5]}", :ingresso_id => "#{comboing.active_iter[0]}", :marca => "#{capousc.marca}", :specie=> "#{capousc.specie}", :razza_id => "#{capousc.razza_id}", :data_nas => "#{capousc.data_nas}", :stalla_nas => "#{capousc.stalla_nas}", :sesso => "#{capousc.sesso}", :nazorig_id => "#{capousc.nazorig_id}", :naznasprimimp_id => "#{capousc.naznasprimimp_id}", :data_applm => "#{capousc.data_applm}", :ilg => "#{capousc.ilg}", :marca_prec => "#{capousc.marca_prec}", :marca_madre => "#{capousc.marca_madre}", :marca_padre => "#{capousc.marca_padre}", :data_ingr => "#{dataingringl}", :allevingr_id => "#{allprov.id}", :nazprov_id => "#{capousc.nazprov_id}", :mod4ingr => "#{mod4}", :data_mod4ingr => "#{datamod4ingl}")
+				Animals.create(:relaz_id => "#{comboprop.active_iter[0]}", :progreg => "#{progr}/#{progreg[1]}", :ingresso_id => "#{comboing.active_iter[0]}", :marca => "#{capousc.marca}", :specie=> "#{capousc.specie}", :razza_id => "#{capousc.razza_id}", :data_nas => "#{capousc.data_nas}", :stalla_nas => "#{capousc.stalla_nas}", :sesso => "#{capousc.sesso}", :nazorig_id => "#{capousc.nazorig_id}", :naznasprimimp_id => "#{capousc.naznasprimimp_id}", :data_applm => "#{capousc.data_applm}", :ilg => "#{capousc.ilg}", :marca_prec => "#{capousc.marca_prec}", :marca_madre => "#{capousc.marca_madre}", :marca_padre => "#{capousc.marca_padre}", :data_ingr => "#{dataingringl}", :allevingr_id => "#{allprov.id}", :nazprov_id => "#{capousc.nazprov_id}", :mod4ingr => "#{mod4}", :data_mod4ingr => "#{datamod4ingl}")
 				end
-			Contatoris.update(comboprop.active_iter[5], { :progreg => "#{progr}/#{progreg[1]}"})
+			Relazs.update(comboprop.active_iter[0], { :progreg => "#{progr}/#{progreg[1]}"})
 			Conferma.conferma(minsaut, "Capi inseriti correttamente.")
 			minsaut.destroy
 			end
-			#Contatoris.update(comboprop.active_iter[5], { :progreg => "#{progr}/#{progreg[1]}"})
+			#Contatoris.update(combodet.active_iter[5], { :progreg => "#{progr}/#{progreg[1]}"})
 			#Conferma.conferma(minsaut, "Capi inseriti correttamente.")
 			#minsaut.destroy
 		end

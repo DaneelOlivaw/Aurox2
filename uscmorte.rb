@@ -35,9 +35,15 @@ def datimorte(finestra, muscite, listasel, combousc)
 	datacertsanusc.max_length=(6)
 	boxusc3.pack_end(datacertsanusc, false, false, 5)
 
-	datausc.signal_connect("changed") {
+	datausc.signal_connect_after("focus-out-event") {
+		#puts "Fuori!"
+		datausc.text = datausc.text + @giorno.strftime("%y").to_s if datausc.text.length == 4
 		datacertsanusc.text =("#{datausc.text}")
 	}
+
+#	datausc.signal_connect("changed") {
+#		datacertsanusc.text =("#{datausc.text}")
+#	}
 
 	#Bottone di inserimento uscite
 

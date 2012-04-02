@@ -1,5 +1,6 @@
 def registronuovo(mstamparegistro)
-	capi = Animals.stamparegistro(@stallaoper.contatori_id, 0)
+	capi = Animals.stamparegistro(@stallaoper.id, 0)
+	presenti = Animals.presenti2(@stallaoper.id).length
 	if capi.length > 0
 		foglio = Prawn::Document.new(:page_size => "A4", :page_layout => :landscape, :top_margin => 20.mm, :left_margin => 6.mm, :right_margin => 10.mm, :bottom_margin => 15.mm, :compress => true, :info => {:Title => "Registro vidimato", :Author => "Aurox",:Creator => "Aurox", :Producer => "Prawn", :CreationDate => Time.now})
 		selcapi = Array.new
@@ -56,7 +57,7 @@ def registronuovo(mstamparegistro)
 		end
 		options = {:at => [foglio.bounds.right-135, 0], :width => 150, :align => :right, :size => 6} #, :start_count_at => 100, :total_pages => 2456}
 		#foglio.move_down 10
-		string = "Stampato in data #{@giorno.strftime("%d/%m/%Y")}"
+		string = "Stampato in data #{@giorno.strftime("%d/%m/%Y")} - rimanenze: #{presenti}"
 		foglio.number_pages string, options
 		foglio.render_file "#{@dir}/registro/registro.pdf"
 

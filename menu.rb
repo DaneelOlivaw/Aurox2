@@ -1,11 +1,12 @@
-def createMenuBar(finestra, listacombo, combo, combo2, combo3)
+def createMenuBar(finestra, listacombo, combo, combo2, combodet, combo3)
 
 	topmen = Gtk::MenuItem.new( "Visualizza" )
 	menu = Gtk::Menu.new
+	
 	item = Gtk::MenuItem.new( "Capi" )
 	item.signal_connect("activate") {
-		if combo.active == -1 or combo2.active == -1 or combo3.active == -1
-			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale ed un proprietario.")
+		if combo.active == -1 or combo2.active == -1 or combodet.active == -1 or combo3.active == -1
+			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale, un detentore ed un proprietario.")
 		else
 			vismovimenti
 		end
@@ -14,10 +15,30 @@ def createMenuBar(finestra, listacombo, combo, combo2, combo3)
 
 	item = Gtk::MenuItem.new( "Archivio" )
 	item.signal_connect("activate") { 
-		if combo.active == -1 or combo2.active == -1 or combo3.active == -1
-			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale ed un proprietario.")
+		if combo.active == -1 or combo2.active == -1 or combodet.active == -1 or combo3.active == -1
+			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale, un detentore ed un proprietario.")
 		else
 			visarchivio
+		end
+	}
+	menu.append( item )
+
+	item = Gtk::MenuItem.new( "Richerca per data su registro" )
+	item.signal_connect("activate") { 
+		if combo.active == -1 or combo2.active == -1 or combodet.active == -1 or combo3.active == -1
+			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale, un detentore ed un proprietario.")
+		else
+			ricercagenerica
+		end
+	}
+	menu.append( item )
+
+	item = Gtk::MenuItem.new( "Richerca capi per permanenza" )
+	item.signal_connect("activate") { 
+		if combo.active == -1 or combo2.active == -1 or combodet.active == -1 or combo3.active == -1
+			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale, un detentore ed un proprietario.")
+		else
+			ricercapermanenza
 		end
 	}
 	menu.append( item )
@@ -37,20 +58,44 @@ def createMenuBar(finestra, listacombo, combo, combo2, combo3)
 	menumod.append( itemmod )
 	separatore = Gtk::SeparatorMenuItem.new
 	menumod.append( separatore )
-	itemmod = Gtk::MenuItem.new( "Proprietari" )
-	itemmod.signal_connect("activate") {modprop}
+	itemmod = Gtk::MenuItem.new( "Codici di stalla" )
+	itemmod.signal_connect("activate") { modcodstalla }
 	menumod.append( itemmod )
 	itemmod = Gtk::MenuItem.new( "Ragioni sociali" )
 	itemmod.signal_connect("activate") {modragsoc}
+	menumod.append( itemmod )
+	itemmod = Gtk::MenuItem.new( "Detentori" )
+	itemmod.signal_connect("activate") {moddetentori}
+	menumod.append( itemmod )
+	itemmod = Gtk::MenuItem.new( "Proprietari" )
+	itemmod.signal_connect("activate") {modprop}
 	menumod.append( itemmod )
 	separatore = Gtk::SeparatorMenuItem.new
 	menumod.append( separatore )
 	itemmod = Gtk::MenuItem.new( "Reinvio capi" )
 	itemmod.signal_connect("activate") {
-		if combo.active == -1 or combo2.active == -1 or combo3.active == -1
-			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale ed un proprietario.")
+		if combo.active == -1 or combo2.active == -1 or combodet.active == -1 or combo3.active == -1
+			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale, un detentore ed un proprietario.")
 		else
 			reinvio
+		end
+	}
+	menumod.append( itemmod )
+	itemmod = Gtk::MenuItem.new( "Partite in ingresso" )
+	itemmod.signal_connect("activate") {
+		if combo.active == -1 or combo2.active == -1 or combodet.active == -1 or combo3.active == -1
+			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale, un detentore ed un proprietario.")
+		else
+			modpartitaingresso
+		end
+	}
+	menumod.append( itemmod )
+	itemmod = Gtk::MenuItem.new( "Partite in uscita" )
+	itemmod.signal_connect("activate") {
+		if combo.active == -1 or combo2.active == -1 or combodet.active == -1 or combo3.active == -1
+			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale, un detentore ed un proprietario.")
+		else
+			modpartitauscita
 		end
 	}
 	menumod.append( itemmod )
@@ -76,6 +121,9 @@ def createMenuBar(finestra, listacombo, combo, combo2, combo3)
 	itemprova = Gtk::MenuItem.new("Ragioni sociali")
 	itemprova.signal_connect("activate") {crearagsoc(finestra)}
 	menuprova.append( itemprova )
+	itemprova = Gtk::MenuItem.new("Detentori")
+	itemprova.signal_connect("activate") {creadet(finestra)}
+	menuprova.append( itemprova )
 	itemprova = Gtk::MenuItem.new("Proprietari")
 	itemprova.signal_connect("activate") {creaprop(finestra)}
 	menuprova.append( itemprova )
@@ -90,8 +138,8 @@ def createMenuBar(finestra, listacombo, combo, combo2, combo3)
 	menustampe = Gtk::Menu.new
 	itemstampe = Gtk::MenuItem.new("Registro non vidimato")
 		itemstampe.signal_connect("activate") {
-		if combo.active == -1 or combo2.active == -1 or combo3.active == -1
-			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale ed un proprietario.")
+		if combo.active == -1 or combo2.active == -1 or combodet.active == -1 or combo3.active == -1
+			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale, un detentore ed un proprietario.")
 		else
 			mascregnonvidim
 		end
@@ -99,8 +147,8 @@ def createMenuBar(finestra, listacombo, combo, combo2, combo3)
 	menustampe.append(itemstampe)
 	itemstampe = Gtk::MenuItem.new("Presenti in stalla")
 	itemstampe.signal_connect("activate") {
-		if combo.active == -1 or combo2.active == -1 or combo3.active == -1
-			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale ed un proprietario.")
+		if combo.active == -1 or combo2.active == -1 or combodet.active == -1 or combo3.active == -1
+			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale, un detentore ed un proprietario.")
 		else
 			stampapres(finestra)
 		end
@@ -108,8 +156,8 @@ def createMenuBar(finestra, listacombo, combo, combo2, combo3)
 	menustampe.append(itemstampe)
 	itemstampe = Gtk::MenuItem.new("Allegato MOD. 4")
 	itemstampe.signal_connect("activate") {
-		if combo.active == -1 or combo2.active == -1 or combo3.active == -1
-			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale ed un proprietario.")
+		if combo.active == -1 or combo2.active == -1 or combodet.active == -1 or combo3.active == -1
+			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale, un detentore ed un proprietario.")
 		else
 			mascallmod4
 		end
@@ -131,8 +179,8 @@ def createMenuBar(finestra, listacombo, combo, combo2, combo3)
 	menustrum.append(itemstrum)
 	itemstrum = Gtk::MenuItem.new("Archivia capi")
 		itemstrum.signal_connect("activate") {
-		if combo.active == -1 or combo2.active == -1 or combo3.active == -1
-			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale ed un proprietario.")
+		if combo.active == -1 or combo2.active == -1 or combodet.active == -1 or combo3.active == -1
+			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale, un detentore ed un proprietario.")
 		else
 			mascarchivia
 		end
@@ -140,8 +188,8 @@ def createMenuBar(finestra, listacombo, combo, combo2, combo3)
 	menustrum.append(itemstrum)
 	itemstrum = Gtk::MenuItem.new("Compatta archivio")
 		itemstrum.signal_connect("activate") {
-		if combo.active == -1 or combo2.active == -1 or combo3.active == -1
-			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale ed un proprietario.")
+		if combo.active == -1 or combo2.active == -1 or combodet.active == -1 or combo3.active == -1
+			Errore.avviso(finestra, "Seleziona una stalla, una ragione sociale, un detentore ed un proprietario.")
 		else
 			capicomp = Archives.count(:conditions => ["relaz_id= ?", "#{@stallaoper.id}"])
 			#puts capicomp

@@ -71,9 +71,9 @@ def mascarchivia
 		risposta = avviso.run
 		avviso.destroy
 		if risposta == Gtk::Dialog::RESPONSE_YES
-			puts "DISTRUGGI!!!"
+			#puts "DISTRUGGI!!!"
 			capiarc = Animals.find(:all, :conditions => ["relaz_id= ? and YEAR(uscita) = ? and uscito = ? and fileusc= ? and fileingr = ? and stampacar = ? and stampascar = ?", "#{@stallaoper.id}", "#{comboanno.active_iter[0]}", "1", "1", "1", "1", "1"])
-			puts capiarc.length
+			#puts capiarc.length
 			archivia(capiarc, marchivia, lista)
 			#creafile(window)
 		else

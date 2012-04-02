@@ -23,6 +23,7 @@ def datifurto(finestra, muscite, listasel, combousc)
 	bottmovusc = Gtk::Button.new( "Inserisci" )
 	bottmovusc.signal_connect("clicked") {
 		begin
+			datausc.text = datausc.text + @giorno.strftime("%y").to_s if datausc.text.length == 4
 			errore = nil
 			if datausc.text == ""
 				Errore.avviso(mdatifurto, "Mancano dati.")

@@ -286,6 +286,32 @@ def modmacelli
 
 #	boxmodmac6.pack_start(annullacampi, false, false, 0)
 
+	bottelimina = Gtk::Button.new( "Elimina" )
+	bottelimina.signal_connect("clicked") {
+		#puts Animals.count(:conditions => ["macelli_id = ?", combomac.active_iter[0]])
+		if Animals.count(:conditions => ["macelli_id = ?", combomac.active_iter[0]]) == 0
+			avviso = Gtk::MessageDialog.new(mmodmacelli, Gtk::Dialog::DESTROY_WITH_PARENT, Gtk::MessageDialog::QUESTION, Gtk::MessageDialog::BUTTONS_YES_NO, "Proseguo con l'eleminazione del macello?")
+			risposta = avviso.run
+			avviso.destroy
+			if risposta == Gtk::Dialog::RESPONSE_YES
+				Macellis.delete(combomac.active_iter[0])
+				Conferma.conferma(mmodmacelli, "Macello eliminato.")
+				nomemac.text=("")
+				idfiscmac.text=("")
+				bollomac.text=("")
+				comboregmac.active = -1
+				generalista(listamac)
+				combomac.model=(listamac)
+			else
+				Conferma.conferma(mmodmacelli, "Operazione annullata.")
+			end
+		else
+			Conferma.conferma(mmodmacelli, "Il macello non può essere eliminato perché in uso.")
+		end
+	}
+	boxmodmac6.pack_start(bottelimina, false, false, 0)
+
+
 	bottchiudi = Gtk::Button.new( "Chiudi" )
 	bottchiudi.signal_connect("clicked") {
 		mmodmacelli.destroy

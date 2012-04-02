@@ -102,6 +102,7 @@ def modtrasportatori #(listatrasp)
 	boxmodtrasp2.pack_start(labelnometrasp, false, false, 5)
 	nometrasp = Gtk::Entry.new()
 	nometrasp.max_length=(50)
+	nometrasp.width_chars=(50)
 	boxmodtrasp2.pack_start(nometrasp, false, false, 5)
 
 	combotrasp.signal_connect( "changed" ) {
@@ -134,6 +135,29 @@ def modtrasportatori #(listatrasp)
 #	}
 
 #	boxmodtrasp6.pack_start(annullacampi, false, false, 0)
+
+	bottelimina = Gtk::Button.new( "Elimina" )
+	bottelimina.signal_connect("clicked") {
+		#puts Animals.count(:conditions => ["trasportatori_id = ?", combotrasp.active_iter[0]])
+		if Animals.count(:conditions => ["trasportatori_id = ?", combotrasp.active_iter[0]]) == 0
+			avviso = Gtk::MessageDialog.new(mmodtrasportatori, Gtk::Dialog::DESTROY_WITH_PARENT, Gtk::MessageDialog::QUESTION, Gtk::MessageDialog::BUTTONS_YES_NO, "Proseguo con l'eleminazione del trasportatore?")
+			risposta = avviso.run
+			avviso.destroy
+			if risposta == Gtk::Dialog::RESPONSE_YES
+				Trasportatoris.delete(combotrasp.active_iter[0])
+				Conferma.conferma(mmodtrasportatori, "Trasportatore eliminato.")
+				nometrasp.text=("")
+				generalista(listatrasp)
+				combotrasp.model=(listatrasp)
+			else
+				Conferma.conferma(mmodtrasportatori, "Operazione annullata.")
+			end
+		else
+			Conferma.conferma(mmodtrasportatori, "Il trasportatore non può essere eliminato perché in uso.")
+		end
+	}
+	boxmodtrasp6.pack_start(bottelimina, false, false, 0)
+
 
 	bottchiudi = Gtk::Button.new( "Chiudi" )
 	bottchiudi.signal_connect("clicked") {
