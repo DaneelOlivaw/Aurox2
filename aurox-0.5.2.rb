@@ -324,7 +324,7 @@ Gtk.init
 		risposta = avviso.run
 		avviso.destroy
 		if risposta == Gtk::Dialog::RESPONSE_YES
-			mascesportadb
+			chiedipassword
 		else
 			Conferma.conferma(window, "Si raccomanda di fare un backup il prima possibile per evitare perdite di dati.")
 		end

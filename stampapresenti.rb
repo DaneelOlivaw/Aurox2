@@ -10,7 +10,7 @@ def stampapres(finestra)
 			#:align => center
 			#text "Bau", :style => :bold, :align => :center
 			#draw_text "Capi presenti nella stalla #{@stallaoper.stalle.cod317} di #{@stallaoper.ragsoc.ragsoc} in data #{@giorno.strftime("%d/%m/%Y")}: #{selcapi.length}", :style => :bold, :align => :center, :at => bounds.top_left
-			foglio.text "Capi presenti nella stalla #{@stallaoper.stalle.cod317} di #{@stallaoper.ragsoc.ragsoc} in data #{@giorno.strftime("%d/%m/%Y")}: #{selcapi.length}",:align => :center, :style => :bold
+			foglio.text "CAPI PRESENTI NELLA STALLA #{@stallaoper.stalle.cod317}IN DATA #{@giorno.strftime("%d/%m/%Y")}: #{selcapi.length}",:align => :center, :style => :bold
 			#foglio.draw_text "pagina <page> di <total>", :at => foglio.bounds.bottom_right
 			#foglio.move_down 10
 		end

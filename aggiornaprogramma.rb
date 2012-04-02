@@ -7,7 +7,7 @@ def aggiornaprogramma(finestra, modo)
 	end
 	if Parameters.parametri.aggiornamento == true
 		#puts "Aggiornamento pronto"
-		#puts "Output = #{output}"
+		puts "Output = #{output}"
 #	if output.include?("5")
 		#puts "Ci sono modifiche"
 		avviso = Gtk::MessageDialog.new(finestra, Gtk::Dialog::DESTROY_WITH_PARENT, Gtk::MessageDialog::QUESTION, Gtk::MessageDialog::BUTTONS_YES_NO, "Ci sono degli aggiornamenti al programma. Li scarico ora?")
