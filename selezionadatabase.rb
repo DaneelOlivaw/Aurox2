@@ -1,27 +1,15 @@
 #Importa database
 
-require 'importadatabase'
-
-def selezionadb(finestra, importadb)
+def selezionadatabase(finestra, importadb)
 
 	selezione = Gtk::FileChooserDialog.new("Seleziona il file da importare", finestra, Gtk::FileChooser::ACTION_OPEN, nil, [Gtk::Stock::CANCEL, Gtk::Dialog::RESPONSE_CANCEL], [Gtk::Stock::OPEN, Gtk::Dialog::RESPONSE_ACCEPT])
-#	if @sistema == "linux"
-#		selezione.current_folder=("./importadb")
-#	else
-		#Dir.chdir("./importadb")
-		#directory = @dir + "/importadb"
-		#puts directory
-		selezione.current_folder=("#{@dir}/importadb")
-#	end
+	selezione.current_folder=("#{@dir}/importadb")
 	filtro = Gtk::FileFilter.new
 	filtro.add_pattern("*.sql")
 	selezione.filter=(filtro)
 	if selezione.run == Gtk::Dialog::RESPONSE_ACCEPT
-		#puts "filename = #{selezione.filename}"
-		#mascimportadb(selezione)
-		#importadb(selezione)
-		mchiedipassword(selezione.filename, "importadb")
+		require 'chiedipassword'
+		chiedipassword(selezione.filename, "importadb")
 		selezione.destroy
 	end
-	#selezione.destroy
 end

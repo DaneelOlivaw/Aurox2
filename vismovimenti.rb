@@ -2,10 +2,9 @@
 
 def vismovimenti
 	mvismov = Gtk::Window.new("Vista movimenti")
-	#mvismov.window_position=(Gtk::Window::POS_CENTER_ALWAYS)
 	mvismov.set_default_size(800, 600)
 	mvismov.maximize
-	mvismovscroll = Gtk::ScrolledWindow.new #(hadjustment = nil, vadjustment = nil)
+	mvismovscroll = Gtk::ScrolledWindow.new
 	boxmovv = Gtk::VBox.new(false, 0)
 	boxmov1 = Gtk::HBox.new(false, 0)
 	boxmov2 = Gtk::HBox.new(false, 0)
@@ -15,12 +14,10 @@ def vismovimenti
 	mvismov.add(boxmovv)
 
 	def riempimento(selmov, lista, labelconto)
-		#puts "riempimento"
 		selmov.each do |m|
 			itermov = lista.append
 			itermov[0] = m.id.to_i
 			itermov[1] = m.progreg
-#			itermov[2] = m.relaz.ragsoc.ragsoc
 			itermov[3] = m.marca
 			itermov[4] = m.specie
 			itermov[5] = m.razza.razza
@@ -45,7 +42,6 @@ def vismovimenti
 			else
 				itermov[18] = ""
 			end
-#			if m.tipo == "I"
 				if m.allevingr_id != nil
 					itermov[19] = m.allevingr.cod317
 					itermov[20] = m.allevingr.ragsoc
@@ -55,9 +51,8 @@ def vismovimenti
 					itermov[19] = ""
 					itermov[20] = ""
 					itermov[21] = ""
-#					itermov[46] = ""
+					itermov[46] = ""
 				end
-#			elsif m.tipo == "U"
 				if m.allevusc_id != nil
 					itermov[30] = m.allevusc.cod317
 					itermov[32] = m.allevusc.ragsoc
@@ -67,10 +62,9 @@ def vismovimenti
 					itermov[30] = ""
 					itermov[32] = ""
 					itermov[33] = ""
-#					itermov[47] = ""
+					itermov[47] = ""
 				end
-#			end
-			if m.nazprov_id.to_s != ""
+			if m.nazprov_id.to_s != "" and m.nazprov_id.to_s != "0"
 				itermov[22] = m.nazprov.codice
 			else
 				itermov[22] = ""
@@ -139,85 +133,17 @@ def vismovimenti
 			else
 				itermov[48] = "NO"
 			end
-			if m.stampacar == true
-				itermov[49] = "SI"
-			else
-				itermov[49] = "NO"
-			end
-			if m.stampascar == true
+			if m.stamparegistro == true
 				itermov[50] = "SI"
 			else
 				itermov[50] = "NO"
 			end
-			itermov[46] = m.mod4usc
-			if m.data_mod4usc != nil
-				itermov[47] = m.data_mod4usc.strftime("%d/%m/%Y")
+			itermov[51] = m.mod4usc
+			unless m.data_mod4usc == nil
+				itermov[52] = m.data_mod4usc.strftime("%d/%m/%Y")
 			else
-				itermov[47] = ""
+				itermov[52] = ""
 			end
-		end
-	labelconto.text = ("Movimenti trovati: #{selmov.length}")
-	end
-	
-	def riempimento2(selmov, lista, labelconto)
-		#puts "riempimento2"
-		selmov.each do |m|
-			itermov = lista.append
-			itermov[0] = m["id"]
-			itermov[1] = m["progreg"]
-#			itermov[2] = m["ragsoc"]
-			itermov[3] = m["marca"]
-			itermov[4] = m["specie"]
-			itermov[5] = m["razza"]
-			itermov[6] = m["data_nas"] #.strftime("%d/%m/%Y")
-			itermov[7] = m["stalla_nas"]
-			itermov[8] = m["sesso"]
-			itermov[9] = m["nazorig"]
-			itermov[10] = m["naznasprimimp"]
-			itermov[11] = m["data_applm"]
-			itermov[12] = m["ilg"]
-			itermov[13] = m["marca_prec"]
-			itermov[14] = m["marca_madre"]
-			itermov[15] = m["marca_padre"]
-			itermov[16] = m["donatrice"]
-			itermov[17] = m["ingresso"]
-			itermov[18] = m["data_ingr"].to_s
-			itermov[19] = m["allevingrcod317"]
-			itermov[20] = m["allevingrragsoc"]
-			itermov[21] = m["allevingridfisc"]
-#			itermov[46] = m["allevingr.id.to_s
-			itermov[30] = m["allevusccod317"]
-			itermov[32] = m["allevuscragsoc"]
-			itermov[33] = m["allevuscidfisc"]
-#				itermov[47] = m["allevusc_id.to_s"]
-			itermov[22] = m["nazprov"]
-			itermov[23] = m["certsaningr"]
-			itermov[24] = m["rifloc"]
-			itermov[25] = m["data_certsaningr"].to_s
-			itermov[26] = m["mod4ingr"]
-			itermov[27] = m["data_mod4ingr"].to_s
-			itermov[28] = m["uscitedescr"]
-			itermov[29] = m["uscita"]
-			itermov[31] = m["nazdest"]
-			itermov[34] = m["macellinome"]
-			itermov[35] = m["macelliif"]
-			itermov[36] = m["macellibollo"]
-			itermov[37] = m["macelliregion"]
-			itermov[38] = m["certsanusc"]
-			itermov[39] = m["data_certsanusc"].to_s
-			itermov[40] = m["trasportatori.nometrasp"]
-			itermov[41] = m["marcasost"]
-			itermov[42] = m["ditta_racc"]
-			itermov[43] = m["clg"]
-			itermov[44] = m["uscito"].to_s
-			itermov[45] = m["fileingr"].to_s
-			itermov[48] = m["fileusc"].to_s
-			itermov[49] = m["stampacar"].to_s
-			#puts itermov[49]
-			#puts m["stampacar"]
-			itermov[50] = m["stampascar"].to_s
-			itermov[46] = m["mod4usc"]
-			itermov[47] = m["data_mod4usc"].to_s
 		end
 	labelconto.text = ("Movimenti trovati: #{selmov.length}")
 	end
@@ -228,49 +154,33 @@ def vismovimenti
 	vistutti = Gtk::Button.new( "Visualizza tutti" )
 	visricerca = Gtk::Button.new( "Cerca capo" )
 	visricercaentry = Gtk::Entry.new
-	lista = Gtk::ListStore.new(Integer, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String)
+	lista = Gtk::ListStore.new(Integer, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String)
 	vista = Gtk::TreeView.new(lista)
-	vista.selection.mode = Gtk::SELECTION_SINGLE #BROWSE #SINGLE #MULTIPLE
-#	vista.show_expanders = (true)
+	vista.selection.mode = Gtk::SELECTION_SINGLE
 	vista.rules_hint = true
-#	vista.set_enable_grid_lines(true)
-#	@relid = @combo3.active_iter[0]
 	visingressi.signal_connect("clicked") {
 		lista.clear
-		selmov = Animals.find(:all, :from => "animals", :conditions => ["relaz_id= ?", "#{@stallaoper.id}"], :order => ["data_ingr, id"])
-		riempimento(selmov, lista, labelconto)
+		riempimento(Animals.ingressi(@stallaoper.id), lista, labelconto)
 	}
 	visuscite.signal_connect("clicked") {
 		lista.clear
-		selmov = Animals.find(:all, :from => "animals", :conditions => ["relaz_id= ? and uscito= ?", "#{@stallaoper.id}", "1"], :order => ["uscita, mod4usc, id"])
-		riempimento(selmov, lista, labelconto)
+		riempimento(Animals.uscite(@stallaoper.id), lista, labelconto)
 	}
 	vispresenti.signal_connect("clicked") {
 		lista.clear
-		#puts "vispresenti"
-		#selmov = Animals.presenti2(@stallaoper.id)
-		#puts selmov.inspect
-		#creahash(selmov)
-		#selmov = Animals.find(:all, :from => "animals", :conditions => ["relaz_id= ? and uscito= ?", "#{@stallaoper.id}", "0"], :order => ["data_ingr"])
-		#riempimento2(selmov, lista, labelconto)
-		#riempimento(selmov, lista, labelconto)
-		riempimento(Animals.presenti2(@stallaoper.id), lista, labelconto)
+		riempimento(Animals.capi(@stallaoper.id, 0, nil), lista, labelconto)
 	}
 	vistutti.signal_connect("clicked") {
 		lista.clear
-		selmov = Animals.find(:all, :from => "animals", :conditions => ["relaz_id= ?", "#{@stallaoper.id}"])
-		riempimento(selmov, lista, labelconto)
+		riempimento(Animals.tutti(@stallaoper.id), lista, labelconto)
 	}
 	visricerca.signal_connect("clicked") {
 		lista.clear
-		selmov = Animals.find(:all, :from => "animals", :conditions => ["relaz_id= ? and marca LIKE ?", "#{@stallaoper.id}", "%#{visricercaentry.text}%"])
-		riempimento(selmov, lista, labelconto)
+		riempimento(Animals.capi(@stallaoper.id, "%", visricercaentry.text), lista, labelconto)
 	}
 		cella = Gtk::CellRendererText.new
 		colonna1 = Gtk::TreeViewColumn.new("Progressivo", cella)
 		colonna1.resizable = true
-#		colonna2 = Gtk::TreeViewColumn.new("Ragione sociale", cella)
-#		colonna2.resizable = true
 		colonna3 = Gtk::TreeViewColumn.new("Marca", cella)
 		colonna4 = Gtk::TreeViewColumn.new("Specie", cella)
 		colonna5 = Gtk::TreeViewColumn.new("Razza", cella)
@@ -316,10 +226,8 @@ def vismovimenti
 		colonna44 = Gtk::TreeViewColumn.new("Ditta raccoglitrice", cella)
 		colonna45 = Gtk::TreeViewColumn.new("File movimento ingresso", cella)
 		colonna46 = Gtk::TreeViewColumn.new("File movimento uscita", cella)
-		colonna47 = Gtk::TreeViewColumn.new("Stampa registro ingresso", cella)
-		colonna48 = Gtk::TreeViewColumn.new("Stampa registro uscita", cella)
+		colonna48 = Gtk::TreeViewColumn.new("Stampa registro", cella)
 		colonna1.set_attributes(cella, :text => 1)
-#		colonna2.set_attributes(cella, :text => 2)
 		colonna3.set_attributes(cella, :text => 3)
 		colonna4.set_attributes(cella, :text => 4)
 		colonna5.set_attributes(cella, :text => 5)
@@ -357,23 +265,15 @@ def vismovimenti
 		colonna37.set_attributes(cella, :text => 37)
 		colonna38.set_attributes(cella, :text => 38)
 		colonna39.set_attributes(cella, :text => 39)
-		colonna40.set_attributes(cella, :text => 46)
-		colonna41.set_attributes(cella, :text => 47)
-#		colonna40.set_attributes(cella, :text => 40)
-#		colonna41.set_attributes(cella, :text => 41)
-#		colonna42.set_attributes(cella, :text => 42)
-#		colonna43.set_attributes(cella, :text => 45)
-#		colonna44.set_attributes(cella, :text => 42)
-#		colonna45.set_attributes(cella, :text => 45)
+		colonna40.set_attributes(cella, :text => 51)
+		colonna41.set_attributes(cella, :text => 52)
 		colonna42.set_attributes(cella, :text => 40)
 		colonna43.set_attributes(cella, :text => 41)
 		colonna44.set_attributes(cella, :text => 42)
 		colonna45.set_attributes(cella, :text => 45)
 		colonna46.set_attributes(cella, :text => 48)
-		colonna47.set_attributes(cella, :text => 49)
 		colonna48.set_attributes(cella, :text => 50)
 		vista.append_column(colonna1)
-#		vista.append_column(colonna2)
 		vista.append_column(colonna3)
 		vista.append_column(colonna4)
 		vista.append_column(colonna5)
@@ -418,7 +318,6 @@ def vismovimenti
 		vista.append_column(colonna44)
 		vista.append_column(colonna45)
 		vista.append_column(colonna46)
-		vista.append_column(colonna47)
 		vista.append_column(colonna48)
 	mvismovscroll.add(vista)
 	boxmov2.pack_start(mvismovscroll, true, true, 0)
@@ -442,9 +341,11 @@ def vismovimenti
 			if selcapo.selected[49] == "SI"
 				Conferma.conferma(mvismov, "Attenzione: il movimento è stato stampato nel registro vidimato; ricordarsi di correggere il cartaceo a mano previo accordo col funzionario preposto.")
 			end
-			modificacapo(selcapo)
+			require 'modingresso'
+			modingresso(selcapo)
 		elsif selcapo.selected[44] == "1"
-			mascsceltamod(selcapo)
+			require 'sceltamovmod'
+			sceltamovmod(selcapo)
 		end
 	end
 	mvismov.show_all

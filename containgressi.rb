@@ -1,6 +1,6 @@
 #Richiesta numero capi da inserire
 
-def masccontaingr(progr, anno)
+def containgressi(progr, anno)
 	mcontaingr = Gtk::Window.new("")
 	mcontaingr.window_position=(Gtk::Window::POS_CENTER_ALWAYS)
 	boxcontaingrv = Gtk::VBox.new(false, 0)
@@ -20,7 +20,8 @@ def masccontaingr(progr, anno)
 	numeroingr.signal_connect("activate") {
 		@containgressi = numeroingr.text.to_i
 		mcontaingr.destroy
-		inscapo(progr, anno)
+		require 'daticapoingr'
+		daticapoingr(progr, anno)
 	}
 
 	bottmov = Gtk::Button.new( "OK" )
@@ -29,7 +30,8 @@ def masccontaingr(progr, anno)
 	bottmov.signal_connect( "clicked" ) {
 		@containgressi = numeroingr.text.to_i
 		mcontaingr.destroy
-		inscapo(progr, anno)
+		require 'daticapoingr'
+		daticapoingr(progr, anno)
 	}
 	mcontaingr.show_all
 end

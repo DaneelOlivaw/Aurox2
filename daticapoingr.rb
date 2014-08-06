@@ -1,5 +1,4 @@
-def inscapo(progr, anno)
-
+def daticapoingr(progr, anno)
 	finestraingr = Gtk::Window.new("Dati del capo")
 	finestraingr.window_position=(Gtk::Window::POS_CENTER_ALWAYS)
 	boxingrvert = Gtk::VBox.new(false, 0)
@@ -29,7 +28,8 @@ def inscapo(progr, anno)
 	boxingr1.pack_start(bottaltricod, true, false, 0)
 
 	bottaltricod.signal_connect("clicked") {
-		insaltricod(finestraingr)
+		require 'codbarrefr'
+		codbarrefr(finestraingr)
 	}
 	errore = 0
 	labelingr = Gtk::Label.new("Totale capi da inserire: #{@containgressi}")
@@ -87,8 +87,8 @@ def inscapo(progr, anno)
 	labelrazza = Gtk::Label.new("Razza:")
 	listar = Gtk::ListStore.new(String, Integer)
 	controllo = Hash.new
-	#selr = Razzas.find(:all, :order => "razza")
-	Razzas.tutti.each do |r|
+
+	@razze.each do |r|
 		iter = listar.append
 		iter[0] = r.razza
 		iter[1] = r.id
@@ -389,7 +389,6 @@ def inscapo(progr, anno)
 					end
 				end
 			rescue Exception => errore
-				#puts errore
 				Errore.avviso(finestraingr, "Controllare la marca")
 			end
 		end
@@ -399,18 +398,11 @@ def inscapo(progr, anno)
 
 	bottmoving = Gtk::Button.new("Dati ingresso")
 	bottmoving.signal_connect("clicked") {
-#		puts "Tasto"
-#		puts @nascita.text
-#		puts @giorno.strftime("%y")
 		begin
-			#puts @nascita.text
-			#puts @nascita.text.length
 			if @nascita.text != nil
 				@nascita.text = @nascita.text + @giorno.strftime("%y").to_s if @nascita.text.length == 4
 				@datanasingl = @nascita.text[4,2] + @nascita.text[2,2] + @nascita.text[0,2]
 				@datanasingl = Time.parse("#{@datanasingl}").strftime("%Y")[0,2] + @datanasingl
-				#puts @nascita.text
-				#puts @datanasingl
 			end
 			if errore != 2
 				errore = 0
@@ -422,7 +414,6 @@ def inscapo(progr, anno)
 				errore = 1
 				@razzaid = 0
 			end
-			@nnaz = @combonaznas.active
 			if @marca.text == "" or @razzaid == 0 or @nascita.text == "" or @combonazorig.active == -1 or @combonaznas.active == -1 or @comboing.active == -1 or @madre.text == ""
 				Errore.avviso(finestraingr, "Mancano dei dati obbligatori.")
 				errore = 1
@@ -433,9 +424,8 @@ def inscapo(progr, anno)
 				Errore.avviso(finestraingr, "Data di nascita errata.")
 				errore = 1
 			elsif Time.parse("#{@datanasingl}") > @giorno
-					#puts "Mbè?"
-					Errore.avviso(finestraingr, "La data di nascita non può essere successiva al giorno odierno.")
-					errore = 1
+				Errore.avviso(finestraingr, "La data di nascita non può essere successiva al giorno odierno.")
+				errore = 1
 			elsif @marcatura.text != "" and @marcatura.text.to_i != 0
 				@marcatura.text = @marcatura.text + @giorno.strftime("%y").to_s if @marcatura.text.length == 4
 				@datamarcingl = @marcatura.text[4,2] + @marcatura.text[2,2] + @marcatura.text[0,2]
@@ -443,7 +433,6 @@ def inscapo(progr, anno)
 				if Time.parse("#{@datamarcingl}") < Time.parse("#{@datanasingl}")
 					Errore.avviso(finestraingr, "La data di marcatura non può essere minore della data di nascita.")
 					errore = 1
-				else
 				end
 			elsif @marcatura.text != "" and @marcatura.text.to_i == 0
 				Errore.avviso(finestraingr, "lettere.")
@@ -452,7 +441,6 @@ def inscapo(progr, anno)
 				@datamarcingl = ""
 			end
 		rescue Exception => errore
-			#puts errore
 			Errore.avviso(finestraingr, "Controllare le date")
 		end
 		if errore == 0
@@ -461,12 +449,18 @@ def inscapo(progr, anno)
 				progr = @depositoingr["progreg"]
 			end
 			@depositoingr = Hash["progreg" => progr, "marca" => @marca.text.upcase, "specie" => @valspecie, "razza" => @razzaid, "datanascita" => @nascita.text, "stallanascita" => @stallanas.text.upcase, "sesso" => @valsesso, "nazorig" => @combonazorig.active_iter[0], "naznasprimimp" => @combonaznas.active_iter[0], "datamarca" => @marcatura.text, "marcaprec" => @prec.text.upcase, "madre" => @madre.text.upcase, "padre" => @padre.text.upcase, "donatrice" => @don.text.upcase, "libgen" => @libgen.text.upcase, "iscrlibgen" => @valgen, "embryo" => @valembryo, "ingresso" => @comboing.active_iter[0]]
-			if @comboing.active_iter[0] == 1
-				mascnascita(finestraingr, labelingr, anno)
+			if @comboing.active_iter[0] == 1 or @comboing.active_iter[0] == 7
+				@nnaz = "IT"
+				require 'ingrnascita'
+				ingrnascita(finestraingr, labelingr, anno)
 			elsif @comboing.active_iter[0] == 13 or @comboing.active_iter[0] == 32
-				mascprimimp(finestraingr, labelingr, anno)
+				@nnaz = @combonaznas.active_iter[2]
+				require 'ingrprimaimp'
+				ingrprimaimp(finestraingr, labelingr, anno)
 			else
-				mascingressi(finestraingr, labelingr, anno)
+				@nnaz = "IT"
+				require 'ingrgenerica'
+				ingrgenerica(finestraingr, labelingr, anno)
 			end
 		end
 	}
@@ -517,7 +511,6 @@ def inscapo(progr, anno)
 						Errore.avviso(finestraingr, "Data di nascita errata.")
 						errore = 1
 					elsif Time.parse("#{@datanasingl}") > @giorno
-						#puts "Errore ins consecutivo"
 						Errore.avviso(finestraingr, "La data di nascita non può essere successiva al giorno odierno.")
 						errore = 1
 					elsif Time.parse("#{@datanasingl}") > Time.parse("#{@depositoingr["dataingr"]}")
@@ -530,7 +523,6 @@ def inscapo(progr, anno)
 						if Time.parse("#{@datamarcingl}") < Time.parse("#{@datanasingl}")
 							Errore.avviso(finestraingr, "La data di marcatura non può essere minore della data di nascita.")
 							errore = 1
-						else
 						end
 					elsif @marcatura.text != "" and @marcatura.text.to_i == 0
 						Errore.avviso(finestraingr, "lettere.")
@@ -558,7 +550,7 @@ def inscapo(progr, anno)
 						@depositoingr["iscrlibgen"] = @valgen
 						@depositoingr["embryo"] = @valembryo
 						@depositoingr["progreg"] += 1
-						Animals.create(:relaz_id => "#{@stallaoper.id.to_i}", :progreg => "#{@depositoingr["progreg"]}/#{anno}", :ingresso_id => "#{@depositoingr["ingresso"]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@razzaid}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :nazorig_id => "#{@combonazorig.active_iter[0]}", :naznasprimimp_id => "#{@combonaznas.active_iter[0]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@depositoingr["dataingr"]}", :nazprov_id => "#{@depositoingr["nazprov"]}", :certsaningr => "#{@depositoingr["certsan"]}", :rifloc => "#{@depositoingr["rifloc"]}", :allevingr_id => "#{@depositoingr["idallprov"]}", :mod4ingr => "#{@depositoingr["mod4"]}", :data_mod4ingr => "#{@depositoingr["datamod4"]}") #:stalla_prov => "#{@depositoingr["stallaprov"]}"
+						Animals.create(:relaz_id => "#{@stallaoper.id.to_i}", :progreg => "#{@depositoingr["progreg"]}/#{anno}", :ingresso_id => "#{@depositoingr["ingresso"]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@razzaid}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :nazorig_id => "#{@combonazorig.active_iter[0]}", :naznasprimimp_id => "#{@combonaznas.active_iter[0]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@depositoingr["dataingr"]}", :nazprov_id => "#{@depositoingr["nazprov"]}", :certsaningr => "#{@depositoingr["certsan"]}", :rifloc => "#{@depositoingr["rifloc"]}", :allevingr_id => "#{@depositoingr["idallprov"]}", :mod4ingr => "#{@depositoingr["mod4"]}", :data_mod4ingr => "#{@depositoingr["datamod4"]}")
 						Relazs.update(@stallaoper.id, { :progreg => "#{@depositoingr["progreg"]}/#{anno}"})
 						labelultima.set_markup("<b>Ultima marca inserita: #{@depositoingr["marca"]}</b>")
 						@marca.text = ""
@@ -569,13 +561,11 @@ def inscapo(progr, anno)
 						@don.text = ""
 						@containgressi -=1
 						labelingr.text = ("Totale capi da inserire: #{@containgressi}")
-
 					end
 				rescue Exception => errore
 					Errore.avviso(finestraingr, "Controllare le date")
 				end
 			}
-
 			@nascita.text = ""
 			@stallanas.text = @depositoingr["stallanascita"]
 			@combonazorig.set_active(0)
@@ -590,7 +580,6 @@ def inscapo(progr, anno)
 				contanaznas+=1
 				@combonaznas.set_active(contanaznas)
 			end
-
 			@marcatura.text = @depositoingr["datamarca"]
 			bottinscons.hide
 			bottmoving.hide
@@ -605,8 +594,8 @@ def inscapo(progr, anno)
 	boxingrvert.pack_start(bottinscons, false, false, 0)
 	
 	# Inserimento consecutivo veloce (per capi esteri)
-	
-		bottinsconsvel.signal_connect("clicked") {
+
+	bottinsconsvel.signal_connect("clicked") {
 		primoins = 1
 		errore = 0
 		if @primocapo == 1
@@ -648,7 +637,6 @@ def inscapo(progr, anno)
 						Errore.avviso(finestraingr, "Data di nascita errata.")
 						errore = 1
 					elsif Time.parse("#{@datanasingl}") > @giorno
-						#puts "consecutivo veloce"
 						Errore.avviso(finestraingr, "La data di nascita non può essere successiva al giorno odierno.")
 						errore = 1
 					elsif Time.parse("#{@datanasingl}") > Time.parse("#{@depositoingr["dataingr"]}")
@@ -668,7 +656,6 @@ def inscapo(progr, anno)
 					elsif @marcatura.text == ""
 						@datamarcingl = ""
 					end
-
 					if errore == 0
 						@arraypres << @marca.text.upcase
 						@depositoingr["marca"] = @marca.text.upcase
@@ -691,7 +678,6 @@ def inscapo(progr, anno)
 
 					end
 				rescue Exception => errore
-				#puts errore
 					Errore.avviso(finestraingr, "Controllare le date")
 				end
 			}

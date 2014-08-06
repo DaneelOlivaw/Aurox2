@@ -1,5 +1,5 @@
-def mascallmod4
-	mallmod4 = Gtk::Window.new("Stampa dell'allegato al Modello 4")
+def stampaallegatomod4
+	mallmod4 = Gtk::Window.new("Stampa Modello 4 e allegato")
 	mallmod4.window_position=(Gtk::Window::POS_CENTER_ALWAYS)
 	boxallmod4v = Gtk::VBox.new(false, 0)
 	boxallmod41 = Gtk::HBox.new(false, 5)
@@ -9,6 +9,9 @@ def mascallmod4
 	boxallmod4v.pack_start(boxallmod42, false, false, 5)
 	boxallmod4v.pack_start(boxallmod43, false, false, 5)
 	mallmod4.add(boxallmod4v)
+	hashmacello = {"id" => "", "nomemac" => "", "bollomac" => "", "region_id" => "", "via" => "", "comune" => "", "provincia" => ""}
+	hashallev = {"id" => "", "ragsoc" => "", "cod317" => "", "via" => "", "comune" => "", "provincia" => ""}
+	hashtrasp = {"id" => "", "nometrasp" => "", "tipomezzo" => "", "marca" => "", "targamotrice" => "", "targarimorchio" => "", "via" => "", "comune" => "", "provincia" => "", "autorizzazione" => "", "datarilascio" => ""}
 	labelmod4 = Gtk::Label.new("Numero modello 4:")
 	boxallmod41.pack_start(labelmod4, false, false, 5)
 	m4 = Gtk::Entry.new()
@@ -29,14 +32,65 @@ def mascallmod4
 	boxallmod42.pack_start(labelanno, false, false, 5)
 	boxallmod42.pack_start(comboanno, false, false, 0)
 
+	stampamod4 = Gtk::Button.new("Stampa mod4")
+	boxallmod43.pack_start(stampamod4, false, false, 5)
+	macello = []
+	allev = []
+	trasportatore = []
+	stampamod4.signal_connect("clicked") {
+		errore = 0
+		capi = Animals.trovapartita("#{@stallaoper.id}", "mod4usc", "#{@stallaoper.stalle.cod317}/#{comboanno.active_iter[0]}/#{m4.text}")
+		if capi.length == 0
+			Errore.avviso(mallmod4, "Questo modello 4 non esiste.") #.avvia
+			errore = 1
+		else
+			if capi[0].uscite_id == 9
+				if capi[0].macelli.via.to_s == "" or capi[0].macelli.comune.to_s == "" or capi[0].macelli.provincia.to_s == ""
+					Errore.avviso(mallmod4, "Manca l'indirizzo del macello, inseriscilo.")
+					require 'modmacello'
+					modmacello(capi[0].macelli_id)
+					errore = 1
+				else
+					macello = Macellis.cercaid(capi[0].macelli_id)
+					trasportatore = Trasportatoris.cercaid(capi[0].trasportatori_id)
+				end
+			else
+				if capi[0].allevusc.via.to_s == "" or capi[0].allevusc.comune.to_s == "" or capi[0].allevusc.provincia.to_s == ""
+					Errore.avviso(mallmod4, "Manca l'indirizzo dell'allevamento, inseriscilo.")
+					require 'modallevamenti'
+					modallevamenti(capi[0].allevusc_id)
+					errore = 1
+				else
+					allev = Allevuscs.cercaid(capi[0].allevusc_id)
+					trasportatore = Trasportatoris.cercaid(capi[0].trasportatori_id)
+				end
+			end
+		end
+		if errore == 0
+			if capi[0].uscite_id == 9
+				hashmacello = {"id" => "#{macello.id}", "nomemac" => "#{macello.nomemac}", "bollomac" => "#{macello.bollomac}", "regione" => "#{macello.region.regione}", "via" => "#{macello.via}", "comune" => "#{macello.comune}", "provincia" => "#{macello.provincia}"}
+			else
+				hashallev = {"id" => "#{allev.id}", "ragsoc" => "#{allev.ragsoc}", "cod317" => "#{allev.cod317}", "via" => "#{allev.via}", "comune" => "#{allev.comune}", "provincia" => "#{allev.provincia}"}
+			end
+			hashtrasp = {"id" => "#{trasportatore.id}", "nometrasp" => "#{trasportatore.nometrasp}", "tipomezzo" => "#{trasportatore.tipomezzo}", "marca" => "#{trasportatore.marca}", "targamotrice" => "#{trasportatore.targamotrice}", "targarimorchio" => "#{trasportatore.targarimorchio}", "via" => "#{trasportatore.via}", "comune" => "#{trasportatore.comune}", "provincia" => "#{trasportatore.provincia}", "autorizzazione" => "#{trasportatore.autorizzazione}", "datarilascio" => "#{trasportatore.datarilascio}"}
+			require 'modello4'
+			modello4("#{@stallaoper.stalle.cod317}/#{comboanno.active_iter[0]}/#{m4.text}", capi[0].uscite_id, hashmacello, hashallev, hashtrasp, capi.length, capi[0].data_mod4usc.strftime("%d/%m/%Y"), mallmod4, nil)
+		end
+	}
+
 	stampa = Gtk::Button.new("Stampa l'allegato")
 	boxallmod43.pack_start(stampa, false, false, 5)
 	stampa.signal_connect("clicked") {
-		capi = Animals.find(:all, :from => "animals", :conditions => ["relaz_id= ? and mod4usc= ?", "#{@stallaoper.id}", "#{@stallaoper.stalle.cod317}/#{comboanno.active_iter[0]}/#{m4.text}"])
+		capi = Animals.trovapartita("#{@stallaoper.id}", "mod4usc", "#{@stallaoper.stalle.cod317}/#{comboanno.active_iter[0]}/#{m4.text}")
 		if capi.length == 0
-			Errore.avviso(mallmod4, "Questo modello 4 non esiste.") #.avvia
+			Errore.avviso(mallmod4, "Questo modello 4 non esiste.")
 		else
-			stampaallegato(m4, comboanno.active_iter[0], capi)
+			require 'allegatomod4'
+			marche = []
+			capi.each do |c|
+				marche << c.marca			
+			end
+			allegatomod4("#{@stallaoper.stalle.cod317}/#{comboanno.active_iter[0]}/#{m4.text}", marche, nil)
 		end
 	}
 	bottchiudi = Gtk::Button.new( "Chiudi" )
@@ -45,33 +99,4 @@ def mascallmod4
 	}
 	boxallmod4v.pack_start(bottchiudi, false, false, 0)
 	mallmod4.show_all
-end
-
-def stampaallegato(m4, anno, capi)
-	foglio = Prawn::Document.new(:page_size => "A4", :top_margin => 5.mm, :left_margin => 25.mm, :right_margin => 15.mm, :bottom_margin => 10.mm, :compress => true, :info => {:Title => "Stampa allegato mod. 4", :Author => "Aurox",:Creator => "Aurox", :Producer => "Prawn", :CreationDate => Time.now}) #.generate "altro/prova2.pdf" do
-	foglio.repeat :all do
-		foglio.text "Azienda agricola #{@stallaoper.ragsoc.ragsoc}\nAllegato del Modello 4 #{@stallaoper.stalle.cod317}/#{anno}/#{m4.text} - Capi totali: #{capi.length}",:align => :center, :style => :bold
-	end
-	stringa = String.new
-	capi.each do |i|
-		stringa += (i.marca.ljust(14) + '  ')
-	end
-	foglio.move_down 5
-	foglio.bounding_box([0, foglio.cursor], :width => 490) do
-		foglio.font("Courier")
-		foglio.text(stringa, :align => :left, :font_size => 12, :leading => -2.5)
-		#foglio.stroke_bounds
-	end
-	foglio.font "Helvetica"
-	options = {:at => [foglio.bounds.right - 135, 0], :width => 150, :align => :right, :size => 8}
-	string = "pag. <page> di <total>"
-	foglio.number_pages string, options
-	foglio.render_file "#{@dir}/altro/allegato.pdf"
-
-	if @sistema == "linux"
-		system("evince #{@dir}/altro/allegato.pdf")
-	else
-#		foglio.save_as('.\altro\allegato.pdf')
-		@shell.ShellExecute('.\altro\allegato.pdf', '', '', 'open', 3)
-	end
 end

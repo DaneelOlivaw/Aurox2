@@ -1,8 +1,7 @@
 # modifica capo uscita
 
-def modificacapousc(selcapo)
+def moduscita(selcapo)
 	modcapousc = Gtk::Window.new("Modifica movimento di uscita")
-	#modcapousc.window_position=(Gtk::Window::POS_CENTER_ALWAYS)
 	modcapousc.set_default_size(800, 600)
 	modcapousc.maximize
 	boxgen = Gtk::VBox.new(false, 0)
@@ -161,8 +160,7 @@ def modificacapousc(selcapo)
 
 	labelrazza = Gtk::Label.new("Razza:")
 	listarazze = Gtk::ListStore.new(Integer, String, String)
-	#selrazze = Razzas.find(:all)
-	Razzas.tutti.each do |r|
+	@razze.each do |r|
 		iter1 = listarazze.append
 		iter1[0] = r.id.to_i
 		iter1[1] = r.razza
@@ -238,7 +236,6 @@ def modificacapousc(selcapo)
 	boxmodc13.pack_end(labelnazorig, false, false, 5)
 	listanazorig = Gtk::ListStore.new(Integer, String, String, Integer)
 	listanazorig.clear
-	#selnazorig = Nazorigs.find(:all, :order => "nome")
 	Nazorigs.tutti.each do |no|
 		iter1 = listanazorig.append
 		iter1[0] = no.id
@@ -277,7 +274,6 @@ def modificacapousc(selcapo)
 	boxmodc15.pack_end(labelnaznas, false, false, 5)
 	listanaznas = Gtk::ListStore.new(Integer, String, String)
 	listanaznas.clear
-	#selnaznas = Naznasprimimps.find(:all, :order => "nome")
 	Naznasprimimps.tutti.each do |n|
 		iter1 = listanaznas.append
 		iter1[0] = n.id
@@ -415,7 +411,6 @@ def modificacapousc(selcapo)
 	boxmodc29.pack_end(labelnazdest, false, false, 5)
 	listanazdest = Gtk::ListStore.new(Integer, String, String)
 	listanazdest.clear
-	#selnazdest = Nazdests.find(:all, :order => "nome")
 	Nazdests.tutti.each do |n|
 		iter1 = listanazdest.append
 		iter1[0] = n.id
@@ -473,7 +468,6 @@ def modificacapousc(selcapo)
 	boxmodc35.pack_end(labelalldest, false, false, 5)
 	listaalldest = Gtk::ListStore.new(Integer, String, String, String)
 	listaalldest.clear
-	#selalldest = Allevuscs.find(:all, :order => "ragsoc")
 	Allevuscs.tutti.each do |a|
 		iter1 = listaalldest.append
 		iter1[0] = a.id
@@ -501,7 +495,7 @@ def modificacapousc(selcapo)
 	if capomod[30] != ""
 		comboalldest.set_active(0)
 		contaalldest = -1
-		while comboalldest.active_iter[3] != capomod[30]
+		while comboalldest.active_iter[0] != capomod[47]
 			contaalldest+=1
 			comboalldest.set_active(contaalldest)
 		end
@@ -515,7 +509,6 @@ def modificacapousc(selcapo)
 	boxmodc37.pack_end(labelmacdest, false, false, 5)
 	listamacdest = Gtk::ListStore.new(Integer, String, String, String, String)
 	listamacdest.clear
-	#selmacdest = Macellis.find(:all, :order => "nomemac")
 	Macellis.tutti.each do |a|
 		iter1 = listamacdest.append
 		iter1[0] = a.id
@@ -540,10 +533,6 @@ def modificacapousc(selcapo)
 	renderer1.visible=(false)
 	combomacdest.pack_start(renderer1,false)
 	combomacdest.set_attributes(renderer1, :text => 3)
-#	renderer1 = Gtk::CellRendererText.new
-#	renderer1.visible=(false)
-#	combomacdest.pack_start(renderer1,false)
-#	combomacdest.set_attributes(renderer1, :text => 4)
 	boxmodc38.pack_start(combomacdest.popdown, false, false, 5)
 	if capomod[36] != ""
 		combomacdest.set_active(0)
@@ -562,7 +551,6 @@ def modificacapousc(selcapo)
 	boxmodc39.pack_end(labeltrasp, false, false, 5)
 	listatrasp = Gtk::ListStore.new(Integer, String)
 	listatrasp.clear
-	#seltrasp = Trasportatoris.find(:all, :order => "nometrasp")
 	Trasportatoris.tutti.each do |t|
 		iter1 = listatrasp.append
 		iter1[0] = t.id
@@ -576,10 +564,6 @@ def modificacapousc(selcapo)
 	renderer1 = Gtk::CellRendererText.new
 	combotrasp.pack_start(renderer1,false)
 	combotrasp.set_attributes(renderer1, :text => 1)
-#	renderer1 = Gtk::CellRendererText.new
-#	renderer1.visible=(false)
-#	combonazdest.pack_start(renderer1,false)
-#	combonazdest.set_attributes(renderer1, :text => 2)
 	boxmodc40.pack_start(combotrasp.popdown, false, false, 0)
 	if capomod[40].to_s != ""
 		combotrasp.set_active(0)
@@ -597,7 +581,7 @@ def modificacapousc(selcapo)
 	labelmod4 = Gtk::Label.new("Modello 4:")
 	boxmodc41.pack_end(labelmod4, false, false, 5)
 	mod4 = Gtk::Entry.new()
-	mod4.text = ("#{capomod[46]}")
+	mod4.text = ("#{capomod[51]}")
 	boxmodc42.pack_start(mod4, false, false, 5)
 
 	#Data modello 4
@@ -606,8 +590,8 @@ def modificacapousc(selcapo)
 	boxmodc43.pack_end(labeldatamod4, false, false, 5)
 	datamod4 = Gtk::Entry.new()
 	datamod4.max_length=(6)
-	if capomod[47] != nil
-		datamod4.text = ("#{capomod[47][0,2]}#{capomod[47][3,2]}#{capomod[47][8,2]}")
+	if capomod[52] != nil
+		datamod4.text = ("#{capomod[52][0,2]}#{capomod[52][3,2]}#{capomod[52][8,2]}")
 	end
 	boxmodc44.pack_start(datamod4, false , false, 0)
 

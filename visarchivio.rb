@@ -2,10 +2,9 @@
 
 def visarchivio
 	mvisarc = Gtk::Window.new("Vista archivio")
-	#mvisarc.window_position=(Gtk::Window::POS_CENTER_ALWAYS)
 	mvisarc.set_default_size(800, 600)
 	mvisarc.maximize
-	mvisarcscroll = Gtk::ScrolledWindow.new #(hadjustment = nil, vadjustment = nil)
+	mvisarcscroll = Gtk::ScrolledWindow.new
 	boxarcv = Gtk::VBox.new(false, 0)
 	boxarc1 = Gtk::HBox.new(false, 0)
 	boxarc2 = Gtk::HBox.new(false, 0)
@@ -16,9 +15,6 @@ def visarchivio
 
 	def riempimento(selarc, lista, labelconto)
 		selarc.each do |m|
-#			puts m.inspect
-#			puts m.relaz.ragsoc.ragsoc
-#			puts m.razza
 			iterarc = lista.append
 			iterarc[0] = m.id.to_i
 			iterarc[1] = m.progreg
@@ -47,36 +43,13 @@ def visarchivio
 			else
 				iterarc[18] = ""
 			end
-#			if m.tipo == "I"
-#				if m.allevingr_id != nil
-					iterarc[19] = m.allevingr_cod317
-					iterarc[20] = m.allevingr_ragsoc
-					iterarc[21] = m.allevingr_idfisc
-#					iterarc[46] = m.allevingr.id.to_s
-#				else
-#					iterarc[19] = ""
-#					iterarc[20] = ""
-#					iterarc[21] = ""
-##					iterarc[46] = ""
-#				end
-#			elsif m.tipo == "U"
-#				if m.allevusc_id != nil
-					iterarc[30] = m.allevusc_cod317
-					iterarc[32] = m.allevusc_ragsoc
-					iterarc[33] = m.allevusc_idfisc
-#					iterarc[47] = m.allevusc_id.to_s
-#				else
-#					iterarc[30] = ""
-#					iterarc[32] = ""
-#					iterarc[33] = ""
-##					iterarc[47] = ""
-#				end
-#			end
-#			if m.nazprov_id.to_s != ""
-				iterarc[22] = m.nazprov
-#			else
-#				iterarc[22] = ""
-#			end
+			iterarc[19] = m.allevingr_cod317
+			iterarc[20] = m.allevingr_ragsoc
+			iterarc[21] = m.allevingr_idfisc
+			iterarc[30] = m.allevusc_cod317
+			iterarc[32] = m.allevusc_ragsoc
+			iterarc[33] = m.allevusc_idfisc
+			iterarc[22] = m.nazprov
 			iterarc[23] = m.certsaningr
 			iterarc[24] = m.rifloc
 			if m.data_certsaningr != nil
@@ -90,32 +63,17 @@ def visarchivio
 			else
 				iterarc[27] = ""
 			end
-#			if m.uscite_id != nil
-				iterarc[28] = m.coduscita
-#			else
-#				iterarc[28] = ""
-#			end
-				if m.data_uscita != nil
+			iterarc[28] = m.coduscita
+			if m.data_uscita != nil
 				iterarc[29] = m.data_uscita.strftime("%d/%m/%Y")
 			else
 				iterarc[29] = ""
 			end
-#			if m.nazdest_id.to_s != ""
-				iterarc[31] = m.nazdest
-#			else
-#				iterarc[31] = ""
-#			end
-#			if m.macelli_id != nil
-				iterarc[34] = m.macello_ragsoc
-				iterarc[35] = m.macello_idfisc
-				iterarc[36] = m.macello_bollo
-				iterarc[37] = m.macello_regione
-#			else
-#				iterarc[34] = ""
-#				iterarc[35] = ""
-#				iterarc[36] = ""
-#				iterarc[37] = ""
-#			end
+			iterarc[31] = m.nazdest
+			iterarc[34] = m.macello_ragsoc
+			iterarc[35] = m.macello_idfisc
+			iterarc[36] = m.macello_bollo
+			iterarc[37] = m.macello_regione
 			iterarc[38] = m.certsanusc
 			if m.data_certsanusc != nil
 				iterarc[39] = m.data_certsanusc.strftime("%d/%m/%Y")
@@ -126,20 +84,12 @@ def visarchivio
 			iterarc[41] = m.marcasost
 			iterarc[42] = m.ditta_racc
 			iterarc[43] = m.clg
-#			iterarc[44] = m.uscito.to_s
-#			if m.registro == true
-#				iterarc[45] = "SI"
-#			else
-#				iterarc[45] = "NO"
-#			end
 			iterarc[46] = m.mod4usc
 			if m.data_mod4usc != nil
 				iterarc[47] = m.data_mod4usc.strftime("%d/%m/%Y")
 			else
 				iterarc[47] = ""
 			end
-#			iterarc[45] = m.registro.to_s
-#			puts iterarc[45]
 		end
 	labelconto.text = ("Capi trovati: #{selarc.length}")
 	end
@@ -149,10 +99,8 @@ def visarchivio
 	visricercaentry = Gtk::Entry.new
 	lista = Gtk::ListStore.new(Integer, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String)
 	vista = Gtk::TreeView.new(lista)
-	vista.selection.mode = Gtk::SELECTION_SINGLE #BROWSE #SINGLE #MULTIPLE
-#	vista.show_expanders = (true)
+	vista.selection.mode = Gtk::SELECTION_SINGLE
 	vista.rules_hint = true
-#	vista.set_enable_grid_lines(true)
 	vistutti.signal_connect("clicked") {
 		lista.clear
 		selarc = Archives.find(:all, :conditions => ["relaz_id= ?", "#{@stallaoper.id}"])
@@ -253,12 +201,6 @@ def visarchivio
 		colonna39.set_attributes(cella, :text => 39)
 		colonna40.set_attributes(cella, :text => 46)
 		colonna41.set_attributes(cella, :text => 47)
-#		colonna40.set_attributes(cella, :text => 40)
-#		colonna41.set_attributes(cella, :text => 41)
-#		colonna42.set_attributes(cella, :text => 42)
-#		colonna43.set_attributes(cella, :text => 45)
-#		colonna44.set_attributes(cella, :text => 42)
-#		colonna45.set_attributes(cella, :text => 45)
 		colonna42.set_attributes(cella, :text => 40)
 		colonna43.set_attributes(cella, :text => 41)
 		colonna44.set_attributes(cella, :text => 42)

@@ -1,7 +1,6 @@
 #Maschera dati movimento d'ingresso generica
 
-def mascingressi(finestraingr, labelingr, anno)
-
+def ingrgenerica(finestraingr, labelingr, anno)
 	mingressi = Gtk::Window.new("Compravendita e altro")
 	mingressi.window_position=(Gtk::Window::POS_CENTER_ALWAYS)
 	boxing1 = Gtk::VBox.new(false, 0)
@@ -86,7 +85,7 @@ def mascingressi(finestraingr, labelingr, anno)
 	boxing4.pack_start(@comboallprov, false, false, 5)
 
 #	#Inserimento nuovo allevamento
-#	
+
 	nallev = Gtk::Button.new("Nuovo allevamento")
 	nallev.signal_connect( "released" ) { mascallevam(listall) }
 	boxing4.pack_start(nallev, false, false, 5)
@@ -118,7 +117,12 @@ def mascingressi(finestraingr, labelingr, anno)
 	@combonazprov.pack_start(renderer1,false)
 	@combonazprov.set_attributes(renderer1, :text => 2)
 	boxing5.pack_start(@combonazprov, false, false, 0)
-	@combonazprov.set_active(@nnaz)
+	@combonazprov.set_active(0)
+	contaprov = -1
+	while @combonazprov.active_iter[2] != @nnaz
+		contaprov+=1
+		@combonazprov.set_active(contaprov)
+	end
 
 	#Modello 4
 
@@ -151,10 +155,6 @@ def mascingressi(finestraingr, labelingr, anno)
 	@testocertsan = Gtk::Entry.new
 	@testocertsan.width_chars=(21)
 	boxing7.pack_start(@testocertsan, false, false, 5)
-#	@certsan.signal_connect("changed") {
-#		annoing = @giorno.strftime("%Y")[0,2] + @dataing.text[4,2]
-#		@testocertsan.text=("INTRA." + "#{@combonazprov.active_iter[2]}" + "." + "#{annoing}" + "." + "#{@certsan.text}")
-#	}
 
 	@certsan.signal_connect("changed") {
 		@dataing.text = @dataing.text + @giorno.strftime("%y").to_s if @dataing.text.length == 4
@@ -179,8 +179,6 @@ def mascingressi(finestraingr, labelingr, anno)
 
 	labelidfiscp = Gtk::Label.new("Identificativo fiscale privenienza:")
 	boxing8.pack_start(labelidfiscp, false, false, 5)
-#	@idfiscp = Gtk::Entry.new()
-#	@idfiscp.editable=(false)
 	boxing8.pack_start(@idfiscp, false, false, 5)
 
 	#Bottone di inserimento ingressi
@@ -192,20 +190,19 @@ def mascingressi(finestraingr, labelingr, anno)
 			@dataing.text = @dataing.text + @giorno.strftime("%y").to_s if @dataing.text.length == 4
 			@dataingingl = @dataing.text[4,2] + @dataing.text[2,2] + @dataing.text[0,2]
 			@dataingingl = Time.parse("#{@dataingingl}").strftime("%Y")[0,2] + @dataingingl
-			if @dataing.text.to_i == 0 #and 
+			if @dataing.text.to_i == 0
 				Errore.avviso(mingressi, "Data di ingresso sbagliata.")
 				errore = 1
 			elsif Time.parse("#{@dataingingl}") < Time.parse("#{@datanasingl}")
 				Errore.avviso(mingressi, "La data di ingresso non può essere inferiore alla data di nascita.")
 				errore = 1
-			elsif @datamod4.text.to_i == 0 #@datamod4.text != "" and @datamod4.text.to_i == 0 or @datamod4.text == "" #and @datamod4.text.to_i != 0
+			elsif @datamod4.text.to_i == 0
 				Errore.avviso(mingressi, "Data mod.4 sbagliata.")
 				errore = 1
 			elsif @datamod4.text != "" and @datamod4.text.to_i != 0
 				@datamod4.text = @datamod4.text + @giorno.strftime("%y").to_s if @datamod4.text.length == 4
 				@datamod4ingl = @datamod4.text[4,2] + @datamod4.text[2,2] + @datamod4.text[0,2]
 				@datamod4ingl = Time.parse("#{@datamod4ingl}").strftime("%Y")[0,2] + @datamod4ingl
-				#puts Time.parse("#{@datamod4ingl}").strftime("%Y")
 				if Time.parse("#{@datamod4ingl}") < Time.parse("#{@dataingingl}")
 					Errore.avviso(mingressi, "La data del mod.4 non può essere inferiore alla data di ingresso.")
 					errore = 1
@@ -231,7 +228,6 @@ def mascingressi(finestraingr, labelingr, anno)
 			@depositoingr["datamod4"] = @datamod4ingl.to_i
 			@depositoingr["certsan"] = @testocertsan.text.upcase
 			@depositoingr["rifloc"] = @rifloc.text.upcase
-#			Animals.create(:relaz_id => "#{@stallaoper.to_i}", :tipo => "I", :cm_ing => "#{@comboing.active_iter[0]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@comborazze.active_iter[0]}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :naz_orig => "#{@combonazorig.active_iter[2]}", :naz_nasprimimp => "#{@combonaznas.active_iter[2]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@dataingingl.to_i}", :allevamenti_id => "#{@idallprov}", :naz_prov => "#{@combonazprov.active_iter[2]}", :mod4 => "#{@comboallprov.active_iter[3] + "/" + @giorno.strftime("%Y") + "/" + @mod4.text}", :data_mod4 => "#{@datamod4ingl.to_i}", :certsan => "#{@testocertsan.text.upcase}", :rifloc => "#{@rifloc.text.upcase}")
 			@depositoingr["progreg"] += 1
 			Animals.create(:relaz_id => "#{@stallaoper.id.to_i}", :progreg => "#{@depositoingr["progreg"]}/#{anno}", :ingresso_id => "#{@comboing.active_iter[0]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@razzaid}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :nazorig_id => "#{@combonazorig.active_iter[0]}", :naznasprimimp_id => "#{@combonaznas.active_iter[0]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@dataingingl.to_i}", :allevingr_id => "#{@idallprov}", :nazprov_id => "#{@combonazprov.active_iter[0]}", :mod4ingr => "#{@comboallprov.active_iter[3] + "/" + Time.parse("#{@datamod4ingl}").strftime("%Y") + "/" + @mod4.text}", :data_mod4ingr => "#{@datamod4ingl.to_i}", :certsaningr => "#{@testocertsan.text.upcase}", :rifloc => "#{@rifloc.text.upcase}")
 			Relazs.update(@stallaoper.id, { :progreg => "#{@depositoingr["progreg"]}/#{anno}"})
@@ -268,4 +264,3 @@ def mascingressi(finestraingr, labelingr, anno)
 	boxing1.pack_start(bottchiudi, false, false, 0)
 	mingressi.show_all
 end
-

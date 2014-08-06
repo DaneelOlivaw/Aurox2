@@ -1,4 +1,4 @@
-def datimorte(finestra, muscite, listasel, combousc)
+def uscmorte(finestra, muscite, listasel, combousc)
 	mdatimorte = Gtk::Window.new("Morte")
 	mdatimorte.window_position=(Gtk::Window::POS_CENTER_ALWAYS)
 	boxuscv = Gtk::VBox.new(false, 0)
@@ -36,14 +36,9 @@ def datimorte(finestra, muscite, listasel, combousc)
 	boxusc3.pack_end(datacertsanusc, false, false, 5)
 
 	datausc.signal_connect_after("focus-out-event") {
-		#puts "Fuori!"
 		datausc.text = datausc.text + @giorno.strftime("%y").to_s if datausc.text.length == 4
 		datacertsanusc.text =("#{datausc.text}")
 	}
-
-#	datausc.signal_connect("changed") {
-#		datacertsanusc.text =("#{datausc.text}")
-#	}
 
 	#Bottone di inserimento uscite
 
@@ -77,29 +72,12 @@ def datimorte(finestra, muscite, listasel, combousc)
 	if errore == nil
 		listasel.each do |model,path,iter|
 			marcauscid = iter[0]
-#			marcausc = iter[2]
-#			specieusc = iter[3]
-#			razzausc = iter[4]
-#			nascitausc = iter[5]
-#			cod317nasusc = iter[6]
-#			sessousc = iter[7]
-#			nazorigusc = iter[8]
-#			nazprimimpusc = iter[9]
-#			datamarcausc = iter[10]
-#			ilgusc = iter[11]
-#			marcaprecedenteusc = iter[12]
-#			madreusc = iter[13]
-#			padreusc = iter[14]
-			#Animals.create(:relaz_id => "#{@stallaoper.id.to_i}", :tipo => "U", :cm_usc => "#{combousc.active_iter[0]}", :marca => "#{marcausc}", :specie => "#{specieusc}", :razza_id => "#{razzausc}", :data_nas => "#{nascitausc}", :stalla_nas => "#{cod317nasusc}", :sesso => "#{sessousc}", :naz_orig => "#{nazorigusc}", :naz_nasprimimp => "#{nazprimimpusc}", :data_applm => "#{datamarcausc}", :ilg => "#{ilgusc}", :marca_prec => "#{marcaprecedenteusc}", :marca_madre => "#{madreusc}", :marca_padre => "#{padreusc}", :uscita => "#{datauscingl}", :certsanusc => "#{certsanusc.text}", :data_certsanusc => "#{datacertsanuscingl.to_i}", :idcoll => "#{marcauscid}")
-			#usc = Animals.find(:first, :conditions => ["idcoll = ?", "#{marcauscid}"])
-			#Animals.update(marcauscid, { :uscito => "1", :idcoll => "#{usc.id}"})
 			Animals.update(marcauscid, { :uscita => "#{datauscingl}", :uscite_id => "#{combousc.active_iter[0]}", :certsanusc => "#{certsanusc.text}", :data_certsanusc => "#{datacertsanuscingl.to_i}", :uscito => "1"})
 		end
 		Conferma.conferma(mdatimorte, "Capi usciti correttamente.")
 		mdatimorte.destroy
 		muscite.destroy
 		finestra.present
-	else
 	end
 	}
 

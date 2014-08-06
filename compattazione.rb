@@ -1,26 +1,57 @@
-def compattazione(mcompatta, capi, anno, lista)
-	#puts anno
-	nomefile = Time.now.strftime("STORICO_CAPI_ANNO_#{anno}_#{@stallaoper.stalle.cod317}_#{@stallaoper.ragsoc.ragsoc.gsub(/[ ]/, "")}_#{@stallaoper.detentori.detentore.gsub(/[ ]/, "")}_#{@stallaoper.prop.prop.gsub(/[ ]/, "")}_#{@stallaoper.atp}_%m%d_%H%M.csv")
-#	if @sistema == "linux"
-	filecomp = File.new("#{@dir}/storico/#{nomefile}", "w+")
-	filecomp.puts("STALLA\tRAGIONE SOCIALE\tDETENTORE\tPROPRIETARIO\tN° REGISTRO\tMARCA\tSPECIE\tRAZZA\tDATA NASCITA\tSTALLA NASCITA\tSESSO\tNAZ. ORIGINE\tNAZ. NASCITA O PRIMA IMPORTAZ.\tDATA APPLICAZIONE MARCA\tISCR. LIBRO GENEAL.\tEMBRYO TRANSFER\tMARCA PRECEDENTE\tMADRE\tPADRE\tDONATRICE\tCOD.LIBRO GENEAL.\tMOTIVO INGRESSO\tDATA INGRESSO\tNAZ. PROVENIENZA\tCERT. SAN. INGRESSO\tDATA CERT. SAN. INGRESSO\tCOD. RIFERIMENTO LOCALE\tCOD. 3127 ALLEV. PROVENIENZA\tRAG. SOC. ALLEV. PROVENIENZA\tID. FISC. ALLEV. PROVENIENZA\tMOD. 4 INGRESSO\tDATA MOD.4 INGRESSO\tMOTIVO USCITA\tDATA USCITA\tDITTA RACCOGLITRICE\tTRASPORTATORE\tMARCA SOSTITUTIVA\tNAZ. DESTINAZIONE\tCOD. 317 ALLEV. DESTINAZIONE\tRAG. SOC. ALLEV. DESTIONAZIONE\tID. FISC. ALLEV. DESTINAZIONE\tBOLLO CEE MACELLO\tRAG. SOC. MACELLO\tID. FISC. MACELLO\tREGIONE MACELLO\tMOD. 4 USCITA\tDATA MOD. 4 USCITA\tCERT. SAN. USCITA\tDATA CERT. SAN. USCITA")
-	capi.each do |c|
-		filecomp.puts("#{c.relaz.stalle.cod317}\t#{c.relaz.ragsoc.ragsoc}\t#{c.relaz.detentori.detentore}\t#{c.relaz.prop.prop}\t\"#{c.progreg}\"\t#{c.marca}\t#{c.specie}\t#{c.razza}\t#{c.data_nas}\t#{c.stalla_nas}\t#{c.sesso}\t#{c.nazorig}\t#{c.naznasprimimp}\t#{c.data_applm}\t#{c.ilg}\t#{c.embryo}\t#{c.marca_prec}\t#{c.marca_madre}\t#{c.marca_padre}\t#{c.donatrice}\t#{c.clg}\t#{c.codingresso}\t#{c.data_ingr}\t#{c.nazprov}\t#{c.certsaningr}\t#{c.data_certsaningr}\t#{c.rifloc}\t#{c.allevingr_cod317}\t#{c.allevingr_ragsoc}\t'#{c.allevingr_idfisc}\t#{c.mod4ingr}\t#{c.data_mod4ingr}\t#{c.coduscita}\t#{c.data_uscita}\t#{c.ditta_racc}\t#{c.trasp}\t#{c.marcasost}\t#{c.nazdest}\t#{c.allevusc_cod317}\t#{c.allevusc_ragsoc}\t'#{c.allevusc_idfisc}\t#{c.macello_bollo}\t#{c.macello_ragsoc}\t'#{c.macello_idfisc}\t#{c.macello_regione}\t#{c.mod4usc}\t#{c.data_mod4usc}\t'#{c.certsanusc}\t#{c.data_certsanusc}")
-		#Archives.delete(c.id)
-	end
-	filecomp.close
-	Conferma.conferma(mcompatta, "Operazione eseguita correttamente.")
+def compattazione
+	mcompatta = Gtk::Window.new("compatta l'archivio")
+	mcompatta.window_position=(Gtk::Window::POS_CENTER_ALWAYS)
+	boxcompv = Gtk::VBox.new(false, 5)
+	boxcomp1 = Gtk::HBox.new(false, 5)
+	boxcomp2 = Gtk::HBox.new(false, 5)
+	boxcomp3 = Gtk::HBox.new(false, 5)
+	mcompatta.add(boxcompv)
+	nota = Gtk::Label.new("La compattazione dell'archivio consiste\nnella copia dei dati della tabella archivio\nin un file apposito e loro cancellazione dalla tabella.\nL'operazione non è reversibile o annullabile,\nper cui si raccomanda di fare attenzione.\n")
+	boxcompv.pack_start(nota, false, false, 5)
 	arranni = []
+	boxcompv.pack_start(boxcomp1, false, false, 5)
+	boxcompv.pack_start(boxcomp2, false, false, 5)
+	boxcompv.pack_start(boxcomp3, false, false, 5)
 	capi = Archives.find(:all, :conditions => ["relaz_id= ?", "#{@stallaoper.id}"])
 	capi.each do |c|
 		arranni << c.data_uscita.strftime("%Y")
 	end
 	arranni.uniq!
-	if lista != nil
-		lista.clear
-		arranni.each do |a|
-			iter = lista.append
-			iter[0] = a
-		end
+	lista = Gtk::ListStore.new(String)
+	arranni.each do |a|
+		iter = lista.append
+		iter[0] = a
 	end
+
+	comboanno = Gtk::ComboBox.new(lista)
+	renderer1 = Gtk::CellRendererText.new
+	comboanno.pack_start(renderer1,false)
+	comboanno.set_attributes(renderer1, :text => 0)
+	comboanno.active=(0)
+	labelanno = Gtk::Label.new("Seleziona l'anno:")
+	boxcomp1.pack_start(labelanno, false, false, 5)
+	boxcomp1.pack_start(comboanno, false, false, 0)
+
+	bottcompatta = Gtk::Button.new("Esegui la compattazione dell'archivio")
+	boxcompv.pack_start(bottcompatta, false, false, 5)
+	bottcompatta.signal_connect("clicked") {
+	
+		avviso = Gtk::MessageDialog.new(mcompatta, Gtk::Dialog::DESTROY_WITH_PARENT, Gtk::MessageDialog::QUESTION, Gtk::MessageDialog::BUTTONS_YES_NO, "Attenzione: si stanno cancellando dall'archivio i capi dell'anno #{comboanno.active_iter[0]}; procedo con l\'operazione?")
+		risposta = avviso.run
+		avviso.destroy
+		if risposta == Gtk::Dialog::RESPONSE_YES
+			capicomp = Archives.find(:all, :conditions => ["relaz_id= ? and YEAR(data_uscita) = ?", "#{@stallaoper.id}", "#{comboanno.active_iter[0]}"])
+			require 'compatta'
+			compatta(mcompatta, capicomp, comboanno.active_iter[0], lista)
+		else
+			Conferma.conferma(mcompatta, "Operazione annullata.")
+		end
+	}
+
+	bottchiudi = Gtk::Button.new( "Chiudi" )
+	boxcompv.pack_start(bottchiudi, false, false, 5)
+	bottchiudi.signal_connect("clicked") {
+		mcompatta.destroy
+	}
+	mcompatta.show_all
 end

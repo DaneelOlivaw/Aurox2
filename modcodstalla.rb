@@ -24,7 +24,6 @@ def modcodstalla
 	def caricastalla
 		@listastalle = Gtk::ListStore.new(Integer, String, String, String)
 		@listastalle.clear
-		#selprop = Props.find(:all, :order => "prop")
 		Stalles.seleziona.each do |s|
 			iter1 = @listastalle.append
 			iter1[0] = s.id
@@ -33,7 +32,6 @@ def modcodstalla
 			iter1[3] = s.comune
 		end
 	end
-
 	caricastalla
 	combostalle = Gtk::ComboBox.new(@listastalle)
 	renderer1 = Gtk::CellRendererText.new
@@ -90,7 +88,6 @@ def modcodstalla
 
 	bottelimina = Gtk::Button.new( "Elimina" )
 	bottelimina.signal_connect("clicked") {
-		#puts Relazs.count(:conditions => ["stalle_id = ?", combostalle.active_iter[0]])
 		if Relazs.count(:conditions => ["stalle_id = ?", combostalle.active_iter[0]]) == 0
 			avviso = Gtk::MessageDialog.new(mmodcodstalla, Gtk::Dialog::DESTROY_WITH_PARENT, Gtk::MessageDialog::QUESTION, Gtk::MessageDialog::BUTTONS_YES_NO, "Proseguo con l'eleminazione del codice di stalla?")
 			risposta = avviso.run
@@ -119,6 +116,5 @@ def modcodstalla
 		mmodcodstalla.destroy
 	}
 	boxmodcodstalla5.pack_start(bottchiudi, false, false, 0)
-
 	mmodcodstalla.show_all
 end

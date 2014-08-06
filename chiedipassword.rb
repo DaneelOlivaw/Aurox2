@@ -1,8 +1,6 @@
-def mchiedipassword(variabile, azione)
-	#puts "Chiedipassword"
+def chiedipassword(variabile, azione)
 	mpassword = Gtk::Window.new("Esportazione database")
 	mpassword.window_position=(Gtk::Window::POS_CENTER_ALWAYS)
-	#mpassword.focus=(true)
 	boxpasswordv = Gtk::VBox.new(false, 0)
 	boxpassword1 = Gtk::HBox.new(false, 5)
 	boxpassword2 = Gtk::HBox.new(false, 5)
@@ -26,19 +24,24 @@ def mchiedipassword(variabile, azione)
 			Errore.avviso(mpassword, "Inserisci una password")
 		else
 			if azione == "cancelladb"
+				require 'eliminadb'
 				eliminadb(password.text)
 				mpassword.destroy
 			elsif azione == "esportadb"
-				esportadb(password.text)
+				require 'esportadatabase'
+				esportadatabase(password.text, azione)
 				mpassword.destroy
 			elsif azione == "importadb"
-				importadb(variabile, password.text)
-				
+				require 'importadatabase'
+				importadatabase(variabile, password.text)
+				mpassword.destroy
+			elsif azione == "aggiornadb"
+				require 'esportadatabase'
+				esportadatabase(password.text, azione).wait
 				mpassword.destroy
 			end
 		end
 	}
-
 	bottesp.signal_connect( "clicked" ) {
 		if password.text == ""
 			Errore.avviso(mpassword, "Inserisci una password")
@@ -55,7 +58,5 @@ def mchiedipassword(variabile, azione)
 			end
 		end
 	}
-
 	mpassword.show_all
-
 end

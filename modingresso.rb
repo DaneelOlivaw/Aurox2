@@ -1,6 +1,5 @@
-def modificacapo(selcapo)
+def modingresso(selcapo)
 	modcapo = Gtk::Window.new("Modifica movimento di ingresso")
-	#modcapo.window_position=(Gtk::Window::POS_CENTER_ALWAYS)
 	modcapo.set_default_size(800, 600)
 	modcapo.maximize
 	boxgen = Gtk::VBox.new(false, 0)
@@ -117,16 +116,8 @@ def modificacapo(selcapo)
 	boxgen.pack_start(boxgrande, true, true)
 	boxgen.pack_start(boxmodc100, false, false)
 	modcapo.add(boxgen)
-	#Modifica marca
 
 	capomod = selcapo.selected
-	#puts capomod[46]
-#	puts "#{capomod[18][6,4]}-#{capomod[18][3,2]}-#{capomod[18][0,2]}"
-	#puts @selcapo[18]
-	#capomodreg = Registros.find(:first, :conditions => "relaz_id='#{@stallaoper}' and marca='#{capomod[3]}' and dataingresso='#{capomod[18][6,4]}-#{capomod[18][3,2]}-#{capomod[18][0,2]}'")
-#	puts capomodreg.relaz_id
-#	puts capomodreg.marca
-#	puts capomodreg.dataingresso
 	labelmarca = Gtk::Label.new("Marca:")
 	boxmodc1.pack_end(labelmarca, false, false, 5)
 	marca = Gtk::Entry.new()
@@ -164,8 +155,7 @@ def modificacapo(selcapo)
 
 	labelrazza = Gtk::Label.new("Razza:")
 	listarazze = Gtk::ListStore.new(Integer, String, String)
-	#selrazze = Razzas.find(:all, :order =>"razza")
-	Razzas.tutti.each do |r|
+	@razze.each do |r|
 		iter1 = listarazze.append
 		iter1[0] = r.id.to_i
 		iter1[1] = r.razza
@@ -239,7 +229,6 @@ def modificacapo(selcapo)
 	boxmodc13.pack_end(labelnazorig, false, false, 5)
 	listanazorig = Gtk::ListStore.new(Integer, String, String, Integer)
 	listanazorig.clear
-	#selnazorig = Nazorigs.find(:all, :order => "nome")
 	Nazorigs.tutti.each do |no|
 		iter1 = listanazorig.append
 		iter1[0] = no.id
@@ -267,7 +256,6 @@ def modificacapo(selcapo)
 
 	combonazorig.set_active(0)
 	contanazorig = -1
-	#puts capomod[9]
 	while combonazorig.active_iter[2] != capomod[9]
 		contanazorig+=1
 		combonazorig.set_active(contanazorig)
@@ -429,7 +417,6 @@ def modificacapo(selcapo)
 
 	labelmovingr = Gtk::Label.new("Motivo ingresso:")
 	listamovingr = Gtk::ListStore.new(Integer, String)
-	#selmovingr = Ingressos.find(:all)
 	Ingressos.tutti.each do |i|
 		iter1 = listamovingr.append
 		iter1[0] = i.id
@@ -467,7 +454,6 @@ def modificacapo(selcapo)
 	boxmodc37.pack_end(labelnazprov, false, false, 5)
 	listanazprov = Gtk::ListStore.new(Integer, String, String)
 	listanazprov.clear
-	#selnazprov = Nazprovs.find(:all, :order => "nome")
 	Nazprovs.tutti.each do |n|
 		iter1 = listanazprov.append
 		iter1[0] = n.id
@@ -515,11 +501,11 @@ def modificacapo(selcapo)
 	boxmodc42.pack_start(rifloc, false, false, 5)
 
 	#Allevamento provenienza
+
 	labelallprov = Gtk::Label.new("Allevamento di provenienza:")
 	boxmodc43.pack_end(labelallprov, false, false, 5)
 	listaallprov = Gtk::ListStore.new(Integer, String, String, String)
 	listaallprov.clear
-	#selallprov = Allevamentis.find(:all, :order => "ragsoc")
 	Allevamentis.tutti.each do |a|
 		iter1 = listaallprov.append
 		iter1[0] = a.id
@@ -545,11 +531,8 @@ def modificacapo(selcapo)
 	comboallprov.set_attributes(renderer1, :text => 3)
 	boxmodc44.pack_start(comboallprov.popdown, false, false, 5)
 	if capomod[19] != ""
-#	if capomod[46] != ""
 		comboallprov.set_active(0)
-#		puts comboallprov.active_iter[0]
 		contaallprov = -1
-#		while comboallprov.active_iter[3] != capomod[19]
 		while comboallprov.active_iter[0] != capomod[46].to_i
 			contaallprov+=1
 			comboallprov.set_active(contaallprov)
@@ -572,7 +555,6 @@ def modificacapo(selcapo)
 	boxmodc47.pack_end(labeldatamod4, false, false, 5)
 	datamod4 = Gtk::Entry.new()
 	datamod4.max_length=(6)
-	#dataingr.text = ("#{capomod[18]}")
 	if capomod[27] != nil
 		datamod4.text = ("#{capomod[27][0,2]}#{capomod[27][3,2]}#{capomod[27][8,2]}")
 	end
@@ -602,7 +584,7 @@ def modificacapo(selcapo)
 		elsif marcatura.text != "" and marcatura.text.to_i == 0
 			Errore.avviso(modcapo, "lettere.")
 			errore = 1
-		elsif marcatura.text == "" #or @marcatura.text == 0 	#	elsif @datamod4.text != "" and @datamod4.text.to_i != 0
+		elsif marcatura.text == ""
 			datamarcingl = ""
 		end
 		if Time.parse("#{datanasingl}") > @giorno
@@ -636,31 +618,6 @@ def modificacapo(selcapo)
 			allprov = comboallprov.active_iter[0]
 		end
 			Animals.update(capomod[0], {:marca => "#{marca.text.upcase}", :specie => "#{valspecie}", :razza_id => "#{comborazze.active_iter[0]}", :data_nas => "#{datanasingl.to_i}", :sesso => "#{valsesso}", :stalla_nas => "#{stallanas.text.upcase}", :nazorig_id => "#{combonazorig.active_iter[0]}", :naznasprimimp_id => "#{combonaznas.active_iter[0]}", :data_applm => "#{datamarcingl}", :ilg => "#{valgen}", :embryo => "#{valembryo}", :marca_prec => "#{prec.text.upcase}", :marca_madre => "#{madre.text.upcase}", :marca_padre => "#{padre.text.upcase}", :donatrice => "#{don.text.upcase}", :clg => "#{libgen.text.upcase}", :ingresso_id => "#{combomovingr.active_iter[0]}", :data_ingr => "#{dataingingl.to_i}", :nazprov_id => "#{combonazprov.active_iter[0]}", :certsaningr => "#{certsan.text.upcase}", :rifloc => "#{rifloc.text.upcase}", :allevingr_id => "#{allprov}", :mod4ingr => "#{mod4.text}", :data_mod4ingr => "#{datamod4ingl.to_i}"})
-=begin
-		if capomod[45] == "SI"
-			#puts "vero"
-			if combomovingr.active_iter[0] == 1
-				regingr = "N"
-			elsif combomovingr.active_iter[0] == 19
-				regingr = "C"
-			else
-				regingr = "A"
-			end
-			if combomovingr.active_iter[0] == 2 or combomovingr.active_iter[0] == 1 or combomovingr.active_iter[0] == 19 or combomovingr.active_iter[0] == 24 or combomovingr.active_iter[0] == 25 or combomovingr.active_iter[0] == 26
-				regprov = comboallprov.active_iter[3]
-			elsif combomovingr.active_iter[0] == 13 or combomovingr.active_iter[0] == 23 or combomovingr.active_iter[0] == 32
-				if certsan.text != "" #or iter.certsan != nil
-					regprov = certsan.text.upcase
-				else
-					regprov = rifloc.text.upcase
-				end
-			end
-			capomodreg = Registros.find(:first, :conditions => "relaz_id='#{@stallaoper.id}' and marca='#{capomod[3]}' and dataingresso='#{capomod[18][6,4]}-#{capomod[18][3,2]}-#{capomod[18][0,2]}'")
-			#puts capomodreg.id
-			#puts capomodreg.marca
-			Registros.update(capomodreg.id, {:marca => "#{marca.text.upcase}", :razza => "#{comborazze.active_iter[2]}", :sesso => "#{valsesso}", :madre => "#{madre.text.upcase}", :tipoingresso => "#{regingr}", :datanascita => "#{datanasingl.to_i}", :dataingresso => "#{dataingingl.to_i}", :provenienza => "#{regprov}", :mod4ingr => "#{mod4.text.upcase}", :certsaningr => "#{certsan.text.upcase}", :marcaprec => "#{prec.text.upcase}"})
-		end
-=end
 			Conferma.conferma(modcapo, "Movimento modificato.")
 			modcapo.destroy
 		end

@@ -1,5 +1,4 @@
-def mascnascita(finestra, labelingr, anno)
-#	begin
+def ingrnascita(finestra, labelingr, anno)
 	mnascita = Gtk::Window.new("Nascita")
 	mnascita.window_position=(Gtk::Window::POS_CENTER_ALWAYS)
 	boxingnas1 = Gtk::VBox.new(false, 0)
@@ -34,7 +33,6 @@ def mascnascita(finestra, labelingr, anno)
 	labelnazprov = Gtk::Label.new("Nazione di provenienza:")
 	boxingnas5.pack_start(labelnazprov, false, false, 5)
 	listanazprov = Gtk::ListStore.new(Integer, String, String)
-	#selnazprov = Nazprovs.find(:all, :order => "nome")
 	Nazprovs.tutti.each do |np|
 		iter1 = listanazprov.append
 		iter1[0] = np.id.to_i
@@ -55,9 +53,13 @@ def mascnascita(finestra, labelingr, anno)
 	@combonazprov.pack_start(renderer1,false)
 	@combonazprov.set_attributes(renderer1, :text => 2)
 	boxingnas5.pack_start(@combonazprov, false, false, 0)
-
 	@dataing.text = @nascita.text
-	@combonazprov.set_active(@nnaz) #sensitive=(false)
+	@combonazprov.set_active(0)
+	contaprov = -1
+	while @combonazprov.active_iter[2] != @nnaz
+		contaprov+=1
+		@combonazprov.set_active(contaprov)
+	end
 
 	#Bottone di inserimento ingressi
 
@@ -75,10 +77,6 @@ def mascnascita(finestra, labelingr, anno)
 				Errore.avviso(mnascita, "La data di ingresso non può essere inferiore alla data di nascita.")
 				errore = 1
 			elsif @dataing.text[4,2] != anno
-#				puts "bau"
-				#puts @dataing.text[4,2].class
-#				puts @giorno.strftime("%Y")[0,2]
-				#puts anno.class
 				Errore.avviso(mnascita, "Si sta operando con l\'anno #{@giorno.strftime("%Y")[0,2]}#{anno}; non è possibile eseguire ingressi di anni diversi.")
 				errore = 1
 			end
@@ -91,15 +89,10 @@ def mascnascita(finestra, labelingr, anno)
 			allprov = Allevingrs.find(:first, :conditions => "cod317 = '#{@stallaoper.stalle.cod317}' and ragsoc = '#{@stallaoper.ragsoc.ragsoc}'")
 			@depositoingr["idallprov"] = allprov.id
 			@depositoingr["progreg"] += 1
-			#puts @depositoingr["progreg"]
-			
-			#Animals.create(:relaz_id => "#{@t.id.to_i}", :tipo => "I", :cm_ing => "#{@comboing.active_iter[0]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@comborazze.active_iter[0]}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :naz_orig => "#{@combonazorig.active_iter[2]}", :naz_nasprimimp => "#{@combonaznas.active_iter[2]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@dataingingl.to_i}", :naz_prov => "#{@combonazprov.active_iter[2]}", :allevamenti_id => "#{@depositoingr["idallprov"]}")
-			
 			Animals.create(:relaz_id => "#{@stallaoper.id.to_i}", :progreg => "#{@depositoingr["progreg"]}/#{anno}", :ingresso_id => "#{@comboing.active_iter[0]}", :marca => "#{@marca.text.upcase}", :specie=> "#{@valspecie}", :razza_id => "#{@razzaid}", :data_nas => "#{@datanasingl.to_i}", :stalla_nas => "#{@stallanas.text.upcase}", :sesso => "#{@valsesso}", :nazorig_id => "#{@combonazorig.active_iter[0]}", :naznasprimimp_id => "#{@combonaznas.active_iter[0]}", :data_applm => "#{@datamarcingl.to_i}", :ilg => "#{@valgen}", :embryo => "#{@valembryo}", :marca_prec => "#{@prec.text.upcase}", :marca_madre => "#{@madre.text.upcase}", :marca_padre => "#{@padre.text.upcase}", :donatrice => "#{@don.text.upcase}", :clg => "#{@libgen.text.upcase}", :data_ingr => "#{@dataingingl.to_i}", :nazprov_id => "#{@combonazprov.active_iter[0]}", :allevingr_id => "#{@depositoingr["idallprov"]}")
 			Relazs.update(@stallaoper.id, { :progreg => "#{@depositoingr["progreg"]}/#{anno}"})
 			@containgressi -=1
 			labelingr.text = ("Totale capi da inserire: #{@containgressi}")
-			#@comborazze.active = -1
 			@razza.text = ""
 			@razzaid = 0
 			@nascita.text = ""
@@ -117,10 +110,8 @@ def mascnascita(finestra, labelingr, anno)
 			Conferma.conferma(mnascita, "Capo inserito correttamente.")
 			mnascita.destroy
 			finestra.present
-		else
 		end
 	}
-
 	boxingnas1.pack_start(bottinserisci, false, false, 0)
 	bottchiudi = Gtk::Button.new( "Chiudi senza salvare" )
 	bottchiudi.signal_connect("clicked") {
